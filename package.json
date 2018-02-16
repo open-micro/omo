@@ -1,0 +1,48 @@
+{
+  "name": "omo",
+  "version": "0.0.1",
+  "private": false,
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "NODE_ENV=test mocha test --recursive --timeout 2000 --exit --bail",
+    "test:coverage": "nyc npm test",
+    "test:unit": "mocha --recursive test/middleware test/models test/routes",
+    "test:integration": "mocha --recursive test/integration"
+  },
+  "dependencies": {
+    "body-parser": "1.18.2",
+    "compression": "1.7.1",
+    "cookie-parser": "1.4.3",
+    "cron-parser": "2.4.4",
+    "express": "4.16.2",
+    "express-async-await": "1.1.0",
+    "glob": "7.1.2",
+    "heartbeats": "5.0.1",
+    "jade": "1.11.0",
+    "method-override": "2.3.10",
+    "mongodb-queue": "3.1.0",
+    "mongoose": "5.0.4",
+    "morgan": "1.9.0",
+    "request": "2.83.0",
+    "request-promise": "4.2.2",
+    "serve-favicon": "2.4.5",
+    "trace-and-clarify-if-possible": "1.0.3",
+    "winston": "2.4.0"
+  },
+  "devDependencies": {
+    "chai": "4.1.2",
+    "debug": "3.1.0",
+    "grunt": "1.0.2",
+    "grunt-contrib-watch": "1.0.0",
+    "grunt-develop": "0.4.0",
+    "load-grunt-tasks": "3.5.2",
+    "mocha": "5.0.0",
+    "nyc": "11.4.1",
+    "portfinder": "1.0.13",
+    "time-grunt": "1.4.0"
+  },
+  "repository": "https://github.com/paulhoconnor/omo.git",
+  "author": "Paul O'Connor",
+  "license": "Apache-2.0"
+}

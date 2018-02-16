@@ -1,0 +1,5 @@
+{
+  "name": "cron1",
+  "type": "cron",
+  "config": "*/2 * * * *"
+}
