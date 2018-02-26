@@ -1,6 +1,6 @@
 const router      = require('express').Router()
 const Trigger     = require('../models/trigger')
-const work        = require('../workers/work')
+const workClient  = require('../utils/work')
 const MongoError  = require('../utils/errors').MongoError
 
 module.exports = (app) => {
@@ -9,7 +9,7 @@ module.exports = (app) => {
 
 router.get('/', async (req, res, next) => {
   try {
-    triggers = await Trigger.find()
+    let triggers = await Trigger.find()
     res.json(triggers);
   } catch (err) {
     next(err)
@@ -18,7 +18,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/name/:name', async (req, res, next) => {
   try {
-    trigger = await Trigger.findOne({name: req.params.name})
+    let trigger = await Trigger.findOne({name: req.params.name})
     res.json(trigger);
   } catch (err) {
     next(err)
@@ -36,11 +36,19 @@ router.post('/', async (req, res, next) => {
 
 router.post('/name/:name/start', async (req, res, next) => {
   try {
-    trigger = await Trigger.findOne({name: req.params.name})
-    trigger.started = true
-    let work_status = await work.addWork(trigger)
-    await Trigger.save(trigger)
-    res.status(200).json({status: work_status})
+    let trigger = await Trigger.findOneAndUpdate({name: req.params.name}, {started: true})
+    let work_status = await workClient.addTrigger(trigger)
+    res.status(200).json({msgId: work_status})
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.post('/name/:name/stop', async (req, res, next) => {
+  try {
+    let trigger = await Trigger.findOneAndUpdate({name: req.params.name}, {started: false})
+    let work_status = await workClient.addTrigger(trigger)
+    res.status(200).json({msgId: work_status})
   } catch (err) {
     next(err)
   }

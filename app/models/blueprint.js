@@ -3,13 +3,20 @@ const Schema = mongoose.Schema
 
 const BlueprintSchema = new Schema({
   created: Date,
+  updated: Date,
   name: String,
-  version: Number,
-  tasks: []
+  version: {type: Number,
+            required: false},
+  triggerName: {type: String,
+                required: false},
+  tasks: [Schema.Types.Mixed]
 })
 
 BlueprintSchema.pre('save', function (next) {
-  if (!this.created) this.created = new Date
+  let date = new Date()
+  if (!this.created)
+    this.created = date
+  this.updated = date
   next()
 })
 

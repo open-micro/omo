@@ -5,7 +5,6 @@ const logger          = require('morgan')
 const cookieParser    = require('cookie-parser')
 const bodyParser      = require('body-parser')
 const compress        = require('compression')
-const methodOverride  = require('method-override')
 const dbErrorHandler  = require('../app/middleware/dbError')
 
 module.exports = (app, config) => {
@@ -25,7 +24,6 @@ module.exports = (app, config) => {
   app.use(cookieParser())
   app.use(compress())
   app.use(express.static(config.root + '/public'))
-  app.use(methodOverride())
 
   // controllers
   var controllers = glob.sync(config.root + '/app/controllers/*.js')

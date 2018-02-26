@@ -2,12 +2,23 @@ const router = require('express').Router()
 const Instance = require('../models/instance')
 
 module.exports = (app) => {
-  app.use('/', router)
+  app.use('/instance', router)
 }
 
-router.get('/', (req, res, next) => {
-  Instance.find((err, intances) => {
-    if (err) return next(err)
-    res.json(instances)
-  })
+router.get('/', async (req, res, next) => {
+  try {
+    let instances = await Instance.find()
+    res.json(instances);
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/blueprint/:id', async (req, res, next) => {
+  try {
+    let instances = await Instance.find({blueprint: req.params.id})
+    res.json(instances);
+  } catch (err) {
+    next(err)
+  }
 })

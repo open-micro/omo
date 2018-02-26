@@ -3,6 +3,7 @@ const Schema = mongoose.Schema
 
 const TriggerSchema = new Schema({
   created: Date,
+  updated: Date,
   name: String,
   version: {
      type: Number,
@@ -10,7 +11,7 @@ const TriggerSchema = new Schema({
   },
   type: {
      type: String,
-     enum: ['cron']
+     enum: ['cron', 'date']
   },
   config: String,
   started: {
@@ -21,8 +22,10 @@ const TriggerSchema = new Schema({
 })
 
 TriggerSchema.pre('save', function (next) {
+  let date = new Date()
   if (!this.created)
-    this.created = new Date
+    this.created = date
+  this.updated = date
   next()
 })
 
