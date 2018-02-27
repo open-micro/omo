@@ -1,5 +1,5 @@
-const config  = require('../config.js')
-const Cron    = require('../../app/models/cron')
+const config  = require('../../config.js')
+const Cron    = require('../../../app/models/cron')
 const path    = require('path')
 const fs      = require('fs')
 const request = require('request-promise')
@@ -9,7 +9,7 @@ var cron_trigger, trigger_id
 
 describe('cron triggers', function() {
   it ('read and parse cron trigger', function(done) {
-    cron_trigger = JSON.parse(fs.readFileSync(path.join(config.samplesDir, 'CronTrigger.omo')))
+    cron_trigger = JSON.parse(fs.readFileSync(path.join(config.samplesDir, 'triggers', 'CronTrigger.omo')))
     done()
   })
 

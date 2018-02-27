@@ -1,5 +1,6 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const mongoose  = require('mongoose')
+const Schema    = mongoose.Schema
+const Task      = require('./task')
 
 const BlueprintSchema = new Schema({
   created: Date,

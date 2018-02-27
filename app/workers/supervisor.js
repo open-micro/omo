@@ -12,6 +12,7 @@ const run = async () => {
       await instanceWorker.fireInstances(triggers.map((trigger) => { // fire instances for triggers
                                           return trigger.name
                                         }))
+    await instanceWorker.processInstances() // run instances 
   } catch(err) {
     logger.error(err)
   }

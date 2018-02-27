@@ -36,7 +36,7 @@ router.post('/', async (req, res, next) => {
 
 router.post('/name/:name/start', async (req, res, next) => {
   try {
-    let trigger = await Trigger.findOneAndUpdate({name: req.params.name}, {started: true})
+    let trigger = await Trigger.findOneAndUpdate({name: req.params.name}, {started: true}, {new: true})
     let work_status = await workClient.addTrigger(trigger)
     res.status(200).json({msgId: work_status})
   } catch (err) {
@@ -46,7 +46,7 @@ router.post('/name/:name/start', async (req, res, next) => {
 
 router.post('/name/:name/stop', async (req, res, next) => {
   try {
-    let trigger = await Trigger.findOneAndUpdate({name: req.params.name}, {started: false})
+    let trigger = await Trigger.findOneAndUpdate({name: req.params.name}, {started: false}, {new: true})
     let work_status = await workClient.addTrigger(trigger)
     res.status(200).json({msgId: work_status})
   } catch (err) {

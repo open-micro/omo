@@ -16,7 +16,6 @@ router.get('/', async (req, res, next) => {
 
 router.get('/name/:name', async (req, res, next) => {
   try {
-    console.log('name: ' + req.params.name)
     let blueprint = await Blueprint.findOne({name: req.params.name})
     res.json(blueprint);
   } catch (err) {
@@ -26,8 +25,18 @@ router.get('/name/:name', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    await Blueprint.create(req.body)
-    res.status(200).json({})
+    let created = await Blueprint.create(req.body)
+    res.status(200).json(created)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.put('/', async (req, res, next) => {
+  try {
+    await Blueprint.update(req.body)
+    let updated = await Blueprint.findOne({name: req.body.name})
+    res.status(200).json(updated)
   } catch (err) {
     next(err)
   }

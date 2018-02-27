@@ -1,5 +1,5 @@
-const config  = require('../config.js')
-const Cron    = require('../../app/models/cron')
+const config  = require('../../config.js')
+const Cron    = require('../../../app/models/cron')
 const path    = require('path')
 const fs      = require('fs')
 const request = require('request-promise')
@@ -9,13 +9,13 @@ var cron_trigger, trigger_id, blueprint
 
 describe('date triggers', function() {
   it ('read and parse date trigger  - set the trigger to fire in 100ms', function(done) {
-    date_trigger = JSON.parse(fs.readFileSync(path.join(config.samplesDir, 'DateTrigger.omo')))
+    date_trigger = JSON.parse(fs.readFileSync(path.join(config.samplesDir, 'triggers', 'DateTrigger.omo')))
     date_trigger.config = new Date(Date.now() + 1000)
     done()
   })
 
   it ('read blueprint to be triggered', function(done) {
-    blueprint = JSON.parse(fs.readFileSync(path.join(config.samplesDir, 'CronBlueprint.omo')))
+    blueprint = JSON.parse(fs.readFileSync(path.join(config.samplesDir, 'blueprints', 'CronBlueprint.omo')))
     done()
   })
 

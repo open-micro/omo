@@ -22,3 +22,12 @@ router.get('/blueprint/:id', async (req, res, next) => {
     next(err)
   }
 })
+
+router.get('/error', async (req, res, next) => {
+  try {
+    let instances = await Instance.find({status: 'error'})
+    res.json(instances);
+  } catch (err) {
+    next(err)
+  }
+})

@@ -13,9 +13,8 @@ const processQueue = async () => {
   if (obj) {
     logger.debug('dequeued trigger')
     logger.debug(util.inspect(obj))
-    logger.debug('acking message')
     let trigger = obj.payload
-    if (!trigger.started) { // if not started it should be started
+    if (trigger.started) { // started field true means start the trigger
       logger.debug('starting trigger: ' + trigger.name)
 
       // create cron entry if trigger is not already running
@@ -40,6 +39,7 @@ const processQueue = async () => {
       await Cron.remove({trigger: trigger._id})
     }
 
+    logger.debug('acking message')
     await (obj.ack)()
   }
 }

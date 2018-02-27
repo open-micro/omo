@@ -1,0 +1,12 @@
+{
+  "name": "dateTriggerPython",
+  "version": "0.1",
+  "triggerName": "date1",
+  "tasks": [{"name": "twoSecPython",
+            "type": "exec",
+            "config": {"command": "python3",
+                       "path": {"main": "test/samples/exec/twoSec.py",
+                                "relative": "true"}
+                      }
+            }]
+}

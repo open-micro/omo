@@ -1,4 +1,4 @@
-const config  = require('../config.js')
+const config  = require('../../config.js')
 const path    = require('path')
 const fs      = require('fs')
 const request = require('request-promise')
@@ -8,7 +8,7 @@ var cron_blueprint
 
 describe('cron triggered blueprints', function() {
   it ('read and parse cron blueprint', function(done) {
-    cron_blueprint = JSON.parse(fs.readFileSync(path.join(config.samplesDir, 'CronBlueprint.omo')))
+    cron_blueprint = JSON.parse(fs.readFileSync(path.join(config.samplesDir, 'blueprints', 'CronBlueprint.omo')))
     done()
   })
 

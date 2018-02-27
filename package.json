@@ -7,14 +7,15 @@
     "start": "node app.js",
     "test": "mocha test --recursive --timeout 4000 --exit --bail",
     "test:coverage": "nyc npm test",
-    "test:unit": "mocha --recursive test/middleware test/models test/routes",
-    "test:integration": "mocha --recursive test/integration"
+    "test:unit": "mocha test/unit --recursive --timeout 4000 --exit --bail",
+    "test:scenarios": "mocha test/scenarios --recursive --timeout 15000 --exit --bail"
   },
   "dependencies": {
     "body-parser": "1.18.2",
     "compression": "1.7.1",
     "cookie-parser": "1.4.3",
     "cron-parser": "2.4.4",
+    "execa": "0.9.0",
     "express": "4.16.2",
     "express-async-await": "1.1.0",
     "glob": "7.1.2",
