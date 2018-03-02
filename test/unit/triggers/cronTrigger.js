@@ -8,6 +8,15 @@ const assert  = require('chai').assert
 var cron_trigger, trigger_id
 
 describe('cron triggers', function() {
+
+  before(function(done) {
+    config.dbTrunc().then(done, done);
+  })
+
+  before(function(done) {
+    config.queueTrunc().then(done, done);
+  })
+
   it ('read and parse cron trigger', function(done) {
     cron_trigger = JSON.parse(fs.readFileSync(path.join(config.samplesDir, 'triggers', 'CronTrigger.omo')))
     done()

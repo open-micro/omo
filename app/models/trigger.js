@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 const TriggerSchema = new Schema({
   created: Date,
   updated: Date,
-  name: String,
+  name: { type: String, unique: true },
   version: {
      type: Number,
      required: false

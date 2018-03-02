@@ -34,8 +34,7 @@ router.post('/', async (req, res, next) => {
 
 router.put('/', async (req, res, next) => {
   try {
-    await Blueprint.update(req.body)
-    let updated = await Blueprint.findOne({name: req.body.name})
+    let updated = await Blueprint.findOneAndUpdate({name: req.body.name}, req.body)
     res.status(200).json(updated)
   } catch (err) {
     next(err)

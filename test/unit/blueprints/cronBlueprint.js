@@ -7,6 +7,15 @@ const assert  = require('chai').assert
 var cron_blueprint
 
 describe('cron triggered blueprints', function() {
+  
+  before(function(done) {
+    config.dbTrunc().then(done, done);
+  })
+
+  before(function(done) {
+    config.queueTrunc().then(done, done);
+  })
+
   it ('read and parse cron blueprint', function(done) {
     cron_blueprint = JSON.parse(fs.readFileSync(path.join(config.samplesDir, 'blueprints', 'CronBlueprint.omo')))
     done()

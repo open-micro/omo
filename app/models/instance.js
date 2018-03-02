@@ -9,7 +9,7 @@ const InstanceSchema = new Schema({
                 default: 0},
   status: {
      type: String,
-     enum: ['ready', 'processing', 'waiting', 'error', 'done'],
+     enum: ['ready', 'processing', 'detached', 'error', 'done'],
      default: 'ready'
   },
   blueprint: {type: Schema.Types.ObjectId,
@@ -21,7 +21,8 @@ const InstanceSchema = new Schema({
             default: {}
           },
   taskResults: [Schema.Types.Mixed],
-  error: String
+  error: String,
+  nextCheck: Date
 })
 
 InstanceSchema.pre('save', function (next) {

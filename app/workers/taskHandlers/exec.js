@@ -1,34 +1,107 @@
-const execa   = require('execa')
-const path    = require('path')
-const util    = require('util')
-const error   = require('./error')
-const logger  = require('../../utils/logger')('execHandler')
+const execa         = require('execa')
+const util          = require('util')
+const {promisify}   = require('util');
+const fs            = require('fs')
+const config        = require('../../../config/config')
+const error         = require('./error')
+const logger        = require('../../utils/logger')('execHandler')
 
-module.exports = async (instance) => {
+const detachedInstanceCheckDate = () => {
+  return new Date(Date.now() + config.detachedInterval * config.schedulerTick)
+}
+
+const detachedFileNames = (instance) => {
+  let root = instance._id + '_' + instance.currentStep
+  let com = '> /tmp/' + root + '.log;echo $? > /tmp/' + root + '.exit'
+  let log = '/tmp/' + root + '.log'
+  let ex = '/tmp/' + root + '.exit'
+
+  return {com: com,
+          log: log,
+          ex: ex}
+}
+
+const processExec = async (instance) => {
+  logger.debug('processExec ')
   let task = instance.blueprint.tasks[instance.currentStep]
-  let args = task.config.args || []
   let command = task.config.command
+  let detach = task.config.detach || false
+  let args = task.config.args || []
+  args.unshift(task.config.path.main)
+
+
+  let options = {}, relative, detach_proc_log
   if (task.config.path) {
-    let p = task.config.path.main
-    if (typeof task.config.path.relative === 'undefined')
-      task.config.path['relative'] = true // default = relative to cwd
-    if (task.config.path.relative)
-      p = path.join(process.cwd(), p)
-    args.unshift(p)
+    relative = task.config.path.relative || true   // default = relative to cwd
+    if (relative)
+      options['cwd'] = process.cwd()
   }
 
-  //command = 'echo'
-  //args = ['foobar']
-  logger.debug('execing command: $' + command + ' ' + args.toString())
-  return execa(command, args).then((result) => {
-    logger.debug('command result: ' + util.inspect(result))
-    instance.taskResults[instance.currentStep] = result
-    instance.status = 'ready'
-    return Promise.resolve(instance)
-  }, (err) => {
-    logger.debug('error processing command: ' + err)
-    error.instanceError(instance, err)
-    return Promise.resolve(instance)
-  })
+  if (detach) {
+    let {com, log} = detachedFileNames(instance)
+    args.push(com)
+    detach_proc_log = log
+    instance.nextCheck = detachedInstanceCheckDate()
+    options['detached'] = true
+    options['shell'] = true
+    options['cleanup'] = false
+    options['stdio'] = ['ignore', 'ignore', 'ignore']
+  }
 
+  logger.debug('execing command: $' + command + ' args: ' + args)
+  if (relative)
+    logger.debug('...relative to cwd: ' + options.cwd)
+  if (detach)
+    logger.debug('...detached')
+
+  if (detach) {
+    logger.debug('starting detached command')
+    let child_proc = execa(command, args, options)
+    child_proc.unref()
+    instance.status = 'detached'
+    instance.taskResults[instance.currentStep] = detach_proc_log
+    instance.markModified('taskResults')
+    return Promise.resolve()
+  } else {
+    logger.debug('starting attached command')
+    return execa(command, args, options).then((result) => {
+      logger.debug('command result: ' + util.inspect(result))
+      instance.taskResults[instance.currentStep] = result
+      instance.markModified('taskResults')
+      instance.status = 'ready'
+      logger.debug('setting instance status = ready')
+
+      return Promise.resolve()
+    }, (err) => {
+      logger.debug('error processing command: ' + err)
+      error.instanceError(instance, err)
+      logger.debug('setting instance status = error')
+
+      return Promise.resolve()
+    })
+  }
+}
+
+const processDetached = async (instance) => {
+  let {ex} = detachedFileNames(instance)
+  try {
+    let file = await promisify(fs.readFile)(ex)
+    if (parseInt(file, 10) !== 0) {
+      logger.debug('detached exec for step ' + instance.currentStep + ' returned exit code ' + file)
+      instance.status = 'error'
+      logger.debug('setting instance status = error')
+    } else {
+      logger.debug('detached exec for step ' + instance.currentStep + ' returned success code ' + file)
+      instance.status = 'ready'
+      logger.debug('setting instance status = ready')
+    }
+  } catch (err) {
+    logger.debug('no such file: ' + ex)
+    instance.nextCheck = detachedInstanceCheckDate()
+  }
+}
+
+module.exports = {
+  processExec: processExec,
+  processDetached: processDetached
 }

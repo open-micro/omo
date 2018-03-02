@@ -1,10 +1,11 @@
 {
-  "name": "dateTriggerPython",
+  "name": "dateTriggerPythonDetached",
   "version": "0.1",
   "triggerName": "date1",
   "tasks": [{"name": "twoSecPython",
             "type": "exec",
             "config": {"command": "python3",
+                       "detach": "true",
                        "path": {"main": "test/samples/exec/twoSec.py",
                                 "relative": "true"}
                       }

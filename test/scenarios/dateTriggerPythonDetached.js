@@ -6,7 +6,7 @@ const assert  = require('chai').assert
 
 var blueprint, trigger
 
-describe('trigger a blueprint instance which runs a python script', function() {
+describe('trigger a blueprint instance which runs a python script in detached mode', function() {
 
   before(function(done) {
     config.dbTrunc().then(done, done);
@@ -17,7 +17,7 @@ describe('trigger a blueprint instance which runs a python script', function() {
   })
 
   it ('read and parse cron blueprint', function(done) {
-    blueprint = JSON.parse(fs.readFileSync(path.join(config.samplesDir, 'blueprints', 'DateTriggerPythonBlueprint.omo')))
+    blueprint = JSON.parse(fs.readFileSync(path.join(config.samplesDir, 'blueprints', 'DateTriggerPythonDetachedBlueprint.omo')))
     done()
   })
 
@@ -64,7 +64,21 @@ describe('trigger a blueprint instance which runs a python script', function() {
     }, done)
   })
 
-  it ('make sure instance completed successfully', function(done) {
+  it ('make sure instance step 1 has been detached', function(done) {
+    setTimeout(() => {
+      var options = {
+        uri: 'http://localhost:' + config.port + '/instance/blueprint/' + blueprint._id,
+        json: true
+      }
+      request(options).then((body) => {
+        assert(body[0])
+        assert.equal(body[0].status, 'detached')
+        done()
+      }, done)
+    }, 2000)
+  })
+
+  it ('make sure instance completes', function(done) {
     setTimeout(() => {
       var options = {
         uri: 'http://localhost:' + config.port + '/instance/blueprint/' + blueprint._id,
@@ -73,7 +87,6 @@ describe('trigger a blueprint instance which runs a python script', function() {
       request(options).then((body) => {
         assert(body[0])
         assert.equal(body[0].status, 'done')
-        assert.equal(body[0].taskResults.length, 2)
         done()
       }, done)
     }, 10000)

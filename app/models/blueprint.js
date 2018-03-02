@@ -5,7 +5,7 @@ const Task      = require('./task')
 const BlueprintSchema = new Schema({
   created: Date,
   updated: Date,
-  name: String,
+  name: { type: String, unique: true },
   version: {type: Number,
             required: false},
   triggerName: {type: String,

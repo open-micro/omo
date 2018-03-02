@@ -40,33 +40,42 @@ const fireInstances = async (trigger_names) => {
 }
 
 const updateInstanceStatus = (instance) => {
-    if (instance.status === 'ready' && instance.blueprint.tasks.length > instance.currentStep+1)
+    if (instance.status === 'ready' && instance.blueprint.tasks.length > instance.currentStep+1) {
       instance.currentStep++
-    else if (instance.status === 'ready' && instance.blueprint.tasks.length === instance.currentStep+1)
+      logger.debug('instance currentStep set to ' + instance.currentStep)
+    } else if (instance.status === 'ready' && instance.blueprint.tasks.length === instance.currentStep+1) {
+      logger.debug('setting instance status = done')
       instance.status = 'done'
-
-    return instance
+    }
 }
 
 // instance processing
 const processInstances = async () => {
   try {
+    // ready instances
     let instances = await Instance.find({status: 'ready'}).populate('blueprint')
-    if (instances.length > 0) {
-      instances.forEach(async (instance) => {
-        while (instance.status === 'ready' && instance.blueprint.tasks[instance.currentStep]) {
-          logger.debug('processing instance of blueprint ' + instance.blueprint.name)
-          if (instance.blueprint.tasks[instance.currentStep].type === 'exec') {
-            logger.debug('processing exec task for ' + instance.blueprint.name + ' task ' + instance.currentStep)
-            instance.status = 'processing'
-            await instance.save()
-            instance = await execHandler(instance) // process exec task
-            instance = updateInstanceStatus(instance) // update instance for next processing
-            await instance.save()
-          }
+    instances.forEach(async (instance) => {
+      while (instance.status === 'ready' && instance.blueprint.tasks[instance.currentStep]) {
+        logger.debug('processing instance of blueprint ' + instance.blueprint.name)
+        if (instance.blueprint.tasks[instance.currentStep].type === 'exec') {
+          logger.debug('processing exec task for ' + instance.blueprint.name + ' task ' + instance.currentStep)
+          instance.status = 'processing'
+          await instance.save()
+          await execHandler.processExec(instance) // process exec task
+          updateInstanceStatus(instance) // update instance for next processing
+          await instance.save()
         }
-      })
-    }
+      }
+    })
+
+    // detached instances
+    instances = await Instance.find({status: 'detached',
+                                    nextCheck: {$lte: Date.now()}}).populate('blueprint')
+    instances.forEach(async (instance) => {
+      await execHandler.processDetached(instance) // process detached task
+      updateInstanceStatus(instance) // update instance for next processing
+      await instance.save()
+    })
   } catch (err) {
     logger.error(err)
     throw(err)
