@@ -3,7 +3,7 @@ const config    = require('../../config/config')
 
 var db
 
-var connect = () => {
+const connect = () => {
   if (!db) {
     return mongoose.connect(config.db).then(() => {
       return Promise.resolve(db = mongoose.connection)

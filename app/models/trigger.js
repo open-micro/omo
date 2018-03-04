@@ -2,6 +2,11 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const TriggerSchema = new Schema({
+  model: {
+     type: String,
+     required: true,
+     enum: ['trigger', 'Trigger']
+  },
   created: Date,
   updated: Date,
   name: { type: String, unique: true },
@@ -15,6 +20,10 @@ const TriggerSchema = new Schema({
   },
   config: String,
   started: {
+     type: Boolean,
+     default: false
+  },
+  auto: {
      type: Boolean,
      default: false
   },

@@ -27,8 +27,14 @@ router.get('/name/:name', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    await Trigger.create(req.body)
-    res.status(200).json({})
+    if (req.body.auto) {
+      req.body.started = true
+    }
+    let trigger = await Trigger.create(req.body)
+    if (trigger.auto) {
+      await workClient.addTrigger(trigger)
+    }
+    res.status(200).json(trigger)
   } catch (err) {
     next(err)
   }
@@ -52,4 +58,19 @@ router.post('/name/:name/stop', async (req, res, next) => {
   } catch (err) {
     next(err)
   }
+
+  router.put('/', async (req, res, next) => {
+    try {
+      if (req.body.auto) {
+        req.body.started = true
+      }
+      let trigger = await Trigger.findOneAndUpdate({name: req.body.name}, req.body)
+      if (trigger.auto) {
+        await workClient.addTrigger(trigger)
+      }
+      res.status(200).json(trigger)
+    } catch (err) {
+      next(err)
+    }
+  })
 })

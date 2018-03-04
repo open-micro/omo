@@ -37,7 +37,9 @@ before(function(done) {
 })
 
 before(function(done) {
-  require("../app").then(function(s) {
+  var app = require("../app")
+  console.log()
+  app.then(function(s) {
     server = s
     done()
   }, done)

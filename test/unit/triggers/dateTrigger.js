@@ -121,7 +121,7 @@ describe('date triggers', function() {
     }, 1000)
   })
 
-  it ('stop cron trigger by name', function(done) {
+  it ('stop date trigger by name', function(done) {
     var options = {
       method: 'POST',
       uri: 'http://localhost:' + config.port + '/trigger/name/' + date_trigger.name + '/stop',
@@ -152,5 +152,70 @@ describe('date triggers', function() {
         done()
       }, done)
     }, 1000)
+  })
+
+  it ('read and parse date trigger auto start - set the trigger to fire in 100ms', function(done) {
+    date_trigger = JSON.parse(fs.readFileSync(path.join(config.samplesDir, 'triggers', 'DateTriggerAuto.omo')))
+    date_trigger.config = new Date(Date.now() + 1000)
+    done()
+  })
+
+  it ('udpate blueprint to fire for auto trigger', function(done) {
+    blueprint.triggerName = date_trigger.name
+    let options = {
+      method: 'PUT',
+      uri: 'http://localhost:' + config.port + '/blueprint',
+      body: blueprint,
+      json: true
+    }
+    request(options).then((body) => {
+      done()
+    }, done)
+  })
+
+  it ('post date trigger', function(done) {
+    let options = {
+      method: 'POST',
+      uri: 'http://localhost:' + config.port + '/trigger',
+      body: date_trigger,
+      json: true
+    }
+    request(options).then((body) => {
+      done()
+    }, done)
+  })
+
+  it ('make sure trigger start field was updated to true', function(done) {
+    var options = {
+      uri: 'http://localhost:' + config.port + '/trigger/name/' + date_trigger.name,
+      json: true
+    }
+    request(options).then((body) => {
+      assert.equal(body.name, date_trigger.name)
+      assert.equal(body.started, true)
+      trigger_id = body._id
+      done()
+    }, done)
+  })
+
+  it ('make sure an Instance document was started for the trigger', function(done) {
+    setTimeout(() => {
+      var options = {
+        uri: 'http://localhost:' + config.port + '/blueprint/name/' + blueprint.name,
+        json: true
+      }
+      request(options).then((body) => {
+        assert.equal(body.name, blueprint.name)
+        options = {
+          uri: 'http://localhost:' + config.port + '/instance/blueprint/' + body._id,
+          json: true
+        }
+        request(options).then((body) => {
+          assert(body, 'no instance for blueprint')
+          assert.equal(body.length, 2)
+          done()
+        }, done)
+      }, done)
+    }, 3000)
   })
 })

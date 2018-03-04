@@ -3,6 +3,11 @@ const Schema    = mongoose.Schema
 const Task      = require('./task')
 
 const BlueprintSchema = new Schema({
+  model: {
+     type: String,
+     required: true,
+     enum: ['blueprint', 'Blueprint']
+  },
   created: Date,
   updated: Date,
   name: { type: String, unique: true },

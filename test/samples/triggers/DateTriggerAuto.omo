@@ -1,0 +1,7 @@
+{
+  "model": "trigger",
+  "name": "date1Auto",
+  "type": "date",
+  "config": "Dec 1, 2020",
+  "auto": "true"
+}

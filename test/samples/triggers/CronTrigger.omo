@@ -1,4 +1,5 @@
 {
+  "model": "trigger",
   "name": "cron1",
   "type": "cron",
   "config": "*/2 * * * *"

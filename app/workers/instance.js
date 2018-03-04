@@ -21,6 +21,8 @@ const fireInstancesforTrigger = async (trigger_name) => {
         })
         return instance._id
     }))
+  } else {
+    logger.debug('no blueprints to fire for trigger ' + trigger_name)
   }
 }
 
