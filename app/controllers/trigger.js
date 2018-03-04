@@ -1,7 +1,7 @@
-const router      = require('express').Router()
-const Trigger     = require('../models/trigger')
-const workClient  = require('../utils/work')
-const MongoError  = require('../utils/errors').MongoError
+const router                        = require('express').Router()
+const {create, update,
+        startByName, stopByName,
+        find, findOne}              = require('../dao/trigger')
 
 module.exports = (app) => {
   app.use('/trigger', router);
@@ -9,8 +9,7 @@ module.exports = (app) => {
 
 router.get('/', async (req, res, next) => {
   try {
-    let triggers = await Trigger.find()
-    res.json(triggers);
+    res.json(await find());
   } catch (err) {
     next(err)
   }
@@ -18,8 +17,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/name/:name', async (req, res, next) => {
   try {
-    let trigger = await Trigger.findOne({name: req.params.name})
-    res.json(trigger);
+    res.json(await findOne({name: req.params.name}));
   } catch (err) {
     next(err)
   }
@@ -27,14 +25,7 @@ router.get('/name/:name', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    if (req.body.auto) {
-      req.body.started = true
-    }
-    let trigger = await Trigger.create(req.body)
-    if (trigger.auto) {
-      await workClient.addTrigger(trigger)
-    }
-    res.status(200).json(trigger)
+    res.status(200).json(await create(req.body))
   } catch (err) {
     next(err)
   }
@@ -42,9 +33,7 @@ router.post('/', async (req, res, next) => {
 
 router.post('/name/:name/start', async (req, res, next) => {
   try {
-    let trigger = await Trigger.findOneAndUpdate({name: req.params.name}, {started: true}, {new: true})
-    let work_status = await workClient.addTrigger(trigger)
-    res.status(200).json({msgId: work_status})
+    res.status(200).json(await startByName(req.params.name))
   } catch (err) {
     next(err)
   }
@@ -52,23 +41,14 @@ router.post('/name/:name/start', async (req, res, next) => {
 
 router.post('/name/:name/stop', async (req, res, next) => {
   try {
-    let trigger = await Trigger.findOneAndUpdate({name: req.params.name}, {started: false}, {new: true})
-    let work_status = await workClient.addTrigger(trigger)
-    res.status(200).json({msgId: work_status})
+    res.status(200).json(await stopByName(req.params.name))
   } catch (err) {
     next(err)
   }
 
   router.put('/', async (req, res, next) => {
     try {
-      if (req.body.auto) {
-        req.body.started = true
-      }
-      let trigger = await Trigger.findOneAndUpdate({name: req.body.name}, req.body)
-      if (trigger.auto) {
-        await workClient.addTrigger(trigger)
-      }
-      res.status(200).json(trigger)
+      res.status(200).json(await update(req.body))
     } catch (err) {
       next(err)
     }

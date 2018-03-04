@@ -59,7 +59,7 @@ describe('trigger a blueprint instance which runs a python script', function() {
       json: true
     }
     request(options).then((body) => {
-      assert(body.msgId)
+      assert.equal(body.name, trigger.name)
       done()
     }, done)
   })
@@ -100,7 +100,7 @@ describe('trigger a blueprint instance which runs a python script', function() {
       json: true
     }
     request(options).then((body) => {
-      assert(body.msgId)
+      assert.equal(body.name, trigger.name)
       done()
     }, done)
   })

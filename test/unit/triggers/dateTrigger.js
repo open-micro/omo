@@ -69,7 +69,6 @@ describe('date triggers', function() {
       json: true
     }
     request(options).then((body) => {
-      console.log(body)
       assert.equal(body.name, blueprint.name)
       done()
     }, done)
@@ -82,7 +81,7 @@ describe('date triggers', function() {
       json: true
     }
     request(options).then((body) => {
-      assert(body.msgId)
+      assert.equal(body.name, date_trigger.name)
       done()
     }, done)
   })
@@ -128,7 +127,7 @@ describe('date triggers', function() {
       json: true
     }
     request(options).then((body) => {
-      assert(body.msgId)
+      assert.equal(body.name, date_trigger.name)
       done()
     }, done)
   })

@@ -30,6 +30,7 @@ describe('cron triggers', function() {
       json: true
     }
     request(options).then((body) => {
+      assert.equal(body.name, cron_trigger.name)
       done()
     }, done)
   })
@@ -52,7 +53,8 @@ describe('cron triggers', function() {
       json: true
     }
     request(options).then((body) => {
-      assert(body.msgId)
+      console.log(body)
+      assert.equal(body.name, cron_trigger.name)
       done()
     }, done)
   })
@@ -86,7 +88,7 @@ describe('cron triggers', function() {
       json: true
     }
     request(options).then((body) => {
-      assert(body.msgId)
+      assert.equal(body.name, cron_trigger.name)
       done()
     }, done)
   })

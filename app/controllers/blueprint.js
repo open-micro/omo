@@ -1,5 +1,5 @@
-const router = require('express').Router()
-const Blueprint = require('../models/blueprint')
+const router                             = require('express').Router()
+const {create, update, find, findOne}    = require('../dao/blueprint')
 
 module.exports = (app) => {
   app.use('/blueprint', router)
@@ -7,8 +7,7 @@ module.exports = (app) => {
 
 router.get('/', async (req, res, next) => {
   try {
-    let blueprints = await Blueprint.find()
-    res.json(blueprints);
+    res.json(await find());
   } catch (err) {
     next(err)
   }
@@ -16,8 +15,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/name/:name', async (req, res, next) => {
   try {
-    let blueprint = await Blueprint.findOne({name: req.params.name})
-    res.json(blueprint);
+    res.json(await findOne({name: req.params.name}))
   } catch (err) {
     next(err)
   }
@@ -25,8 +23,7 @@ router.get('/name/:name', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    let created = await Blueprint.create(req.body)
-    res.status(200).json(created)
+    res.status(200).json(await create(req.body))
   } catch (err) {
     next(err)
   }
@@ -34,8 +31,7 @@ router.post('/', async (req, res, next) => {
 
 router.put('/', async (req, res, next) => {
   try {
-    let updated = await Blueprint.findOneAndUpdate({name: req.body.name}, req.body)
-    res.status(200).json(updated)
+    res.status(200).json(await update(req.body))
   } catch (err) {
     next(err)
   }
