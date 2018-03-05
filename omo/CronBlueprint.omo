@@ -1,0 +1,6 @@
+{
+  "model": "blueprint",
+  "name": "cron1",
+  "version": "0.1",
+  "triggerName": "date1"
+}

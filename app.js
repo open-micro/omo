@@ -5,20 +5,21 @@ const glob          = require('glob')
 const db            = require('./app/utils/db')
 const supervisor    = require('./app/workers/supervisor')
 const logger        = require('./app/utils/logger')('app')
+const glogger       = require('./app/utils/logger')('global')
 
 require('trace-and-clarify-if-possible')
 
 // end if top-level error in promise
 process.on('unhandledRejection', err => {
-  logger.error(err)
-  process.exit(1)
+  glogger.error(err)
 })
 
 const env = process.env.NODE_ENV || 'development'
 
 var queue
 
-module.exports = db.connect().then(db => {
+module.exports = () => {
+  return db.connect().then(db => {
     logger.info('db connection established')
 
     // models
@@ -55,3 +56,4 @@ module.exports = db.connect().then(db => {
     logger.error('unable to connect to database at ' + config.db)
     return Promise.reject(err)
   })
+}

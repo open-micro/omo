@@ -6,6 +6,4 @@ const instanceError = (instance, err) => {
   instance.error = err
 }
 
-module.exports = {
-  instanceError : instanceError
-}
+module.exports = {instanceError}

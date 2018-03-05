@@ -7,6 +7,8 @@ const Blueprint   = require('../app/models/blueprint')
 const Instance    = require('../app/models/instance')
 const queue       = require('../app/utils/queue')
 
+const mockery     = require('mockery')
+
 var db_con, server
 
 var config = require('../config/config')
@@ -14,13 +16,14 @@ var config = require('../config/config')
 config.samplesDir = path.join('test', 'samples')
 config.schedulerTick = 200
 config.detachedInterval = 10
+config.mock = true
 
 config.dbTrunc = async () =>  {
   db_con = await db.connect()
-  await Trigger.remove()
-  await Cron.remove()
-  await Blueprint.remove()
-  await Instance.remove()
+  await Trigger.remove({})
+  await Cron.remove({})
+  await Blueprint.remove({})
+  await Instance.remove({})
 }
 
 config.queueTrunc = async () => {
@@ -36,18 +39,16 @@ before(function(done) {
   findPort().then(done, done);
 })
 
-before(function(done) {
-  var app = require("../app")
-  console.log()
-  app.then(function(s) {
-    server = s
-    done()
-  }, done)
+before(function() {
+  mockery.enable({
+      warnOnReplace: false,
+      warnOnUnregistered: false
+  })
+  mockery.registerMock('./config/config', config);
 })
 
-after(function(done) {
-  server.close()
-  done()
+after(function() {
+  mockery.disable()
 })
 
 module.exports = config

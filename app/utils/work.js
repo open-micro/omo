@@ -61,9 +61,4 @@ const getNextWork = () => {
     })
 }
 
-module.exports = {
-  addTrigger: addTrigger,
-  addWork: addWork,
-  getNextTrigger: getNextTrigger,
-  getNextWork: getNextWork
-}
+module.exports = {addTrigger, addWork, getNextTrigger, getNextWork}

@@ -1,16 +1,16 @@
-const Blueprint = require('../models/blueprint')
+const Cron = require('../models/cron')
 
 const create = async (input) => {
-  return await Blueprint.create(input)
+    return await Cron.create(input)
 }
 
 const update = async (input) => {
-  return await Blueprint.findOneAndUpdate({name: input.name}, input)
+  return await Cron.findOneAndUpdate({_id: input._id}, input)
 }
 
 const upsert = async (input) => {
   let obj
-  if (!(obj = await Blueprint.findOneAndUpdate({name: input.name}, input, {new: true})))
+  if (!(obj = await Cron.findOneAndUpdate({name: input.name}, input, {new: true})))
     obj = create(input)
 
   return obj
@@ -18,7 +18,7 @@ const upsert = async (input) => {
 
 const find = async (query, populate) => {
   query = query || {}
-  var q = Blueprint.find(query)
+  var q = Cron.find(query)
   if (populate)
     q.populate(populate)
   return await q.exec()
@@ -26,10 +26,14 @@ const find = async (query, populate) => {
 
 const findOne = async (query, populate) => {
   query = query || {}
-  var q = Blueprint.findOne(query)
+  var q = Cron.findOne(query)
   if (populate)
     q.populate(populate)
   return await q.exec()
 }
 
-module.exports = {create, update, upsert, find, findOne}
+const remove = async (query) => {
+  return await Cron.findOneAndRemove(query)
+}
+
+module.exports = {create, update, upsert, find, findOne, remove}

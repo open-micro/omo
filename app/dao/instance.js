@@ -8,19 +8,20 @@ const update = async (input) => {
   return await Instance.findOneAndUpdate({_id: input._id}, input)
 }
 
-const find = async (query) => {
+const find = async (query, populate) => {
   query = query || {}
-  return await Instance.find(query)
+  var q = Instance.find(query)
+  if (populate)
+    q.populate(populate)
+  return await q.exec()
 }
 
-const findOne = async (query) => {
+const findOne = async (query, populate) => {
   query = query || {}
-  return await Instance.findOne(query)
+  var q = Instance.findOne(query)
+  if (populate)
+    q.populate(populate)
+  return await q.exec()
 }
 
-module.exports = {
-  create: create,
-  update: update,
-  find: find,
-  findOne: findOne
-}
+module.exports = {create, update, find, findOne}

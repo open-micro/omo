@@ -13,7 +13,4 @@ class ExtendableError extends Error {
 class MongoError extends ExtendableError {}
 class QueueError extends ExtendableError {}
 
-module.exports = {
-  MongoError: MongoError,
-  QueueError: QueueError
-}
+module.exports = {MongoError,QueueError}

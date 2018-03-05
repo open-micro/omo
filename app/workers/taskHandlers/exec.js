@@ -101,7 +101,4 @@ const processDetached = async (instance) => {
   }
 }
 
-module.exports = {
-  processExec: processExec,
-  processDetached: processDetached
-}
+module.exports = {processExec, processDetached}

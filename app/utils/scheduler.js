@@ -1,5 +1,4 @@
 const heartbeats  = require('heartbeats')
-const winston     = require('winston')
 
 var heart
 
@@ -15,8 +14,4 @@ const schedule = (beat_interval, fn) => {
   heart.createEvent(beat_interval, fn)
 }
 
-module.exports = {
-  start: start,
-  stop: stop,
-  schedule: schedule
-}
+module.exports = {start, stop, schedule}

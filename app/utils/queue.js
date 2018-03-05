@@ -79,12 +79,5 @@ var deleteAllMessages = async (db) => {
     return Promise.resolve()
 }
 
-module.exports = {
-  createQueue: createQueue,
-  createAllQueues: createAllQueues,
-  addMessage: addMessage,
-  getMessage: getMessage,
-  ackMessage: ackMessage,
-  pingMessage: pingMessage,
-  deleteAllMessages: deleteAllMessages
-}
+module.exports = {createQueue, createAllQueues, addMessage, getMessage,
+                  ackMessage, pingMessage, deleteAllMessages}

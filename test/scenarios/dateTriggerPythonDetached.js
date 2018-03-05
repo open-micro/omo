@@ -16,6 +16,19 @@ describe('trigger a blueprint instance which runs a python script in detached mo
     config.queueTrunc().then(done, done);
   })
 
+  before(function(done) {
+    var app = require("../../app")
+    app().then(function(s) {
+      server = s
+      done()
+    }, done)
+  })
+
+  after(function(done) {
+    server.close()
+    done()
+  })
+
   it ('read and parse cron blueprint', function(done) {
     blueprint = JSON.parse(fs.readFileSync(path.join(config.samplesDir, 'blueprints', 'DateTriggerPythonDetachedBlueprint.omo')))
     done()

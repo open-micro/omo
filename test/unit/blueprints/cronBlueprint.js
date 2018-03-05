@@ -7,13 +7,26 @@ const assert  = require('chai').assert
 var cron_blueprint
 
 describe('cron triggered blueprints', function() {
-  
+
   before(function(done) {
     config.dbTrunc().then(done, done);
   })
 
   before(function(done) {
     config.queueTrunc().then(done, done);
+  })
+
+  before(function(done) {
+    var app = require("../../../app")
+    app().then(function(s) {
+      server = s
+      done()
+    }, done)
+  })
+
+  after(function(done) {
+    server.close()
+    done()
   })
 
   it ('read and parse cron blueprint', function(done) {

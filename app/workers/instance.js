@@ -1,5 +1,5 @@
-const Blueprint     = require('../models/blueprint')
-const Instance      = require('../models/instance')
+const Blueprint     = require('../dao/blueprint')
+const Instance      = require('../dao/instance')
 const util          = require('util')
 const execHandler   = require('./taskHandlers/exec')
 const logger        = require('../utils/logger')('instance worker')
@@ -16,10 +16,10 @@ const fireInstancesforTrigger = async (trigger_name) => {
         Instance.create(instance).then((inst) => {
           instance = inst
           logger.debug('created instance ' + util.inspect(instance))
+          return instance._id
         }, (err) => {
           throw err
         })
-        return instance._id
     }))
   } else {
     logger.debug('no blueprints to fire for trigger ' + trigger_name)
@@ -55,7 +55,7 @@ const updateInstanceStatus = (instance) => {
 const processInstances = async () => {
   try {
     // ready instances
-    let instances = await Instance.find({status: 'ready'}).populate('blueprint')
+    let instances = await Instance.find({status: 'ready'}, 'blueprint')
     instances.forEach(async (instance) => {
       while (instance.status === 'ready' && instance.blueprint.tasks[instance.currentStep]) {
         logger.debug('processing instance of blueprint ' + instance.blueprint.name)
@@ -72,7 +72,7 @@ const processInstances = async () => {
 
     // detached instances
     instances = await Instance.find({status: 'detached',
-                                    nextCheck: {$lte: Date.now()}}).populate('blueprint')
+                                    nextCheck: {$lte: Date.now()}}, 'blueprint')
     instances.forEach(async (instance) => {
       await execHandler.processDetached(instance) // process detached task
       updateInstanceStatus(instance) // update instance for next processing
@@ -84,7 +84,4 @@ const processInstances = async () => {
   }
 }
 
-module.exports = {
-  fireInstances: fireInstances,
-  processInstances: processInstances
-}
+module.exports = {fireInstances, processInstances}

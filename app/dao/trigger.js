@@ -1,5 +1,7 @@
 const Trigger     = require('../models/trigger')
 const workClient  = require('../utils/work')
+const util        = require('util')
+const logger      = require('../utils/logger')('trigger DAO')
 
 const create = async (trigger) => {
   if (trigger.auto) {
@@ -17,39 +19,54 @@ const update = async (trigger) => {
   if (trigger.auto) {
     trigger.started = true
   }
-  trigger = await Trigger.findOneAndUpdate({name: trigger.name}, trigger)
+  trigger = await Trigger.findOneAndUpdate({name:trigger.name}, trigger)
+  if (trigger.auto) {
+    await workClient.addTrigger(trigger)
+  }
+}
+
+const upsert = async (trigger) => {
+  if (trigger.auto) {
+    trigger.started = true
+  }
+
+  if (!await Trigger.findOneAndUpdate({name: trigger.name}, trigger, {new: true})) {
+    logger.debug('upsert creating trigger: ' + trigger.name)
+    trigger = create(trigger)
+    logger.debug(util.inspect(trigger))
+  }
+
   if (trigger.auto) {
     await workClient.addTrigger(trigger)
   }
 }
 
 const startByName = async (name) => {
-  let trigger = await Trigger.findOneAndUpdate({name: name}, {started: true}, {new: true})
+  let trigger = await Trigger.findOneAndUpdate({name}, {started: true}, {new: true})
   await workClient.addTrigger(trigger)
   return trigger
 }
 
 const stopByName = async (name) => {
-  let trigger = await Trigger.findOneAndUpdate({name: name}, {started: false}, {new: true})
+  let trigger = await Trigger.findOneAndUpdate({name}, {started: false}, {new: true})
   await workClient.addTrigger(trigger)
   return trigger
 }
 
-const find = async (query) => {
+const find = async (query, populate) => {
   query = query || {}
-  return await Trigger.find(query)
+  var q = Trigger.find(query)
+  if (populate)
+    q.populate(populate)
+  return await q.exec()
 }
 
-const findOne = async (query) => {
+const findOne = async (query, populate) => {
   query = query || {}
-  return await Trigger.findOne(query)
+  var q = Trigger.findOne(query)
+  if (populate)
+    q.populate(populate)
+  return await q.exec()
 }
 
-module.exports = {
-  create: create,
-  update: update,
-  startByName: startByName,
-  stopByName: stopByName,
-  find: find,
-  findOne: findOne
-}
+module.exports = {create, update, upsert, find, findOne, startByName, stopByName}

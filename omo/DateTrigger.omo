@@ -1,0 +1,6 @@
+{
+  "model": "trigger",
+  "name": "date1",
+  "type": "date",
+  "config": "Dec 1, 2017"
+}

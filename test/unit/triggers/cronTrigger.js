@@ -17,6 +17,19 @@ describe('cron triggers', function() {
     config.queueTrunc().then(done, done);
   })
 
+  before(function(done) {
+    var app = require("../../../app")
+    app().then(function(s) {
+      server = s
+      done()
+    }, done)
+  })
+
+  after(function(done) {
+    server.close()
+    done()
+  })
+
   it ('read and parse cron trigger', function(done) {
     cron_trigger = JSON.parse(fs.readFileSync(path.join(config.samplesDir, 'triggers', 'CronTrigger.omo')))
     done()
@@ -53,7 +66,6 @@ describe('cron triggers', function() {
       json: true
     }
     request(options).then((body) => {
-      console.log(body)
       assert.equal(body.name, cron_trigger.name)
       done()
     }, done)
