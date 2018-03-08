@@ -1,6 +1,7 @@
 const router                             = require('express').Router()
 const {create, update, find, findOne}    = require('../dao/instance')
 
+console.log(1111)
 module.exports = (app) => {
   app.use('/instance', router)
 }

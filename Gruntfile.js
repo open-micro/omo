@@ -1,6 +1,7 @@
 'use strict';
 
 const request = require('request');
+const webpackConfig = require('./webpack.config')
 
 module.exports = (grunt) => {
   // show elapsed time at the end
@@ -8,43 +9,53 @@ module.exports = (grunt) => {
   // load all grunt tasks
   require('load-grunt-tasks')(grunt);
 
-  const reloadPort = 35729;
   let files;
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     develop: {
       server: {
-        file: 'app.js'
+        file: 'index.js'
       }
+    },
+    webpack: {
+      options: {
+        stats: !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
+      },
+      prod: webpackConfig,
+      dev: Object.assign({ watch: false }, webpackConfig)
     },
     watch: {
       options: {
-        nospawn: true,
-        livereload: reloadPort
+        nospawn: true
       },
       js: {
         files: [
+          'index.js',
           'app.js',
           'app/**/*.js',
+          '!app/client/**',
           'config/*.js'
         ],
-        tasks: ['develop', 'delayed-livereload']
+        tasks: ['develop']
+      },
+      client: {
+        files: [
+          'app/client/**/*.jsx',
+          'app/client/**/*.js'
+        ],
+        tasks: ['webpack']
+      },
+      scss: {
+        files: [
+          'app/client/**/*.scss'
+        ],
+        tasks: ['webpack']
       },
       css: {
         files: [
           'public/css/*.css'
-        ],
-        options: {
-          livereload: reloadPort
-        }
-      },
-      views: {
-        files: [
-          'app/views/*.jade',
-          'app/views/**/*.jade'
-        ],
-        options: { livereload: reloadPort }
+        ]
       }
     }
   });
@@ -53,23 +64,9 @@ module.exports = (grunt) => {
   files = grunt.config('watch.js.files');
   files = grunt.file.expand(files);
 
-  grunt.registerTask('delayed-livereload', 'Live reload after the node server has restarted.', () => {
-    const done = this.async();
-    setTimeout(() => {
-      request.get('http://localhost:' + reloadPort + '/changed?files=' + files.join(','), (err, res) => {
-          const reloaded = !err && res.statusCode === 200;
-          if (reloaded) {
-            grunt.log.ok('Delayed live reload successful.');
-          } else {
-            grunt.log.error('Unable to make a delayed live reload.');
-          }
-          done(reloaded);
-        });
-    }, 500);
-  });
-
   grunt.registerTask('default', [
     'develop',
+    'webpack',
     'watch'
   ]);
 };

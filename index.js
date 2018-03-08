@@ -7,13 +7,13 @@ const Blueprint = require('./app/dao/blueprint')
 const Trigger   = require('./app/dao/trigger')
 const logger    = require('./app/utils/logger')('index')
 
-const start = async (autoLoad) => {
+const load = async (loadDir) => {
+  console.log(1111)
+  let dir = loadDir || path.join(process.cwd(), 'omo')
 
-  let server =  await require('./app')()
-
-  if (autoLoad) {
-    let fileNames = await util.promisify(recurse)(path.join(process.cwd(), 'omo'))
-    logger.debug('processing ' + fileNames.length + ' files')
+  try {
+    let fileNames = await util.promisify(recurse)(dir)
+    logger.debug('loading ' + fileNames.length + ' omo files')
     let readFile = util.promisify(jsonfile.readFile)
     fileNames.forEach(async (filename) => {
       try {
@@ -27,9 +27,20 @@ const start = async (autoLoad) => {
         logger.error('Could not load file ' + filename + ': ' + err)
       }
     })
+  } catch (err) {
+    logger.error('could not load omo files: ' + err)
   }
-
-  return server
 }
 
-module.exports = {start}
+const run = async () => {
+  let server =  await require('./app')()
+
+  if (process.env.AUTOLOAD) {
+    await load(process.env.AUTOLOAD_DIR)
+    return server
+  } else {
+    return server
+  }
+}
+
+run()
