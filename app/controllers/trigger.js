@@ -4,12 +4,12 @@ const {create, update,
         find, findOne}              = require('../dao/trigger')
 
 module.exports = (app) => {
-  app.use('/trigger', router);
+  app.use('/trigger', router)
 }
 
 router.get('/', async (req, res, next) => {
   try {
-    res.json(await find());
+    res.json(await find())
   } catch (err) {
     next(err)
   }
@@ -17,7 +17,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/name/:name', async (req, res, next) => {
   try {
-    res.json(await findOne({name: req.params.name}));
+    res.json(await findOne({name: req.params.name}))
   } catch (err) {
     next(err)
   }
