@@ -1,53 +1,43 @@
-import React from "react";
-import {Link} from "react-router-dom";
+import React  from 'react'
+import {Link} from 'react-router-dom'
 
 export default class Nav extends React.Component {
   constructor() {
     super()
     this.state = {
-      collapsed: true,
-    };
+      collapsed: true
+    }
+
+  }
+
+  active = (path) => {
+    if (path === this.props.location.pathname) {
+      return 'active'
+    }
   }
 
   toggleCollapse() {
-    const collapsed = !this.state.collapsed;
+    const collapsed = !this.state.collapsed
     this.setState({collapsed})
   }
 
   render() {
-    const { location } = this.props;
-    const { collapsed } = this.state;
-    const featuredClass = location.pathname === "/" ? "active" : "";
-    const archivesClass = location.pathname.match(/^\/favorites/) ? "active" : "";
-    const settingsClass = location.pathname.match(/^\/settings/) ? "active" : "";
-    const navClass = collapsed ? "collapse" : "";
-
+    const navClass = this.state.collapsed ? "collapse" : ""
     return (
-      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle" onClick={this.toggleCollapse.bind(this)} >
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
+      <nav class="navbar navbar-expand-sm navbar-dark bg-inverse bg-primary">
+        <a class="navbar-brand" href="#">OMO</a>
+          <button class="navbar-toggler" onClick={this.toggleCollapse.bind(this)} type="button" data-toggle="collapse" data-target="#navbarCollapse">
+             <span class="navbar-toggler-icon"></span>
+           </button>
+           <div class={"navbar-collapse " + navClass} id="navbarCollapse">
+              <div class="navbar-nav">
+                 <Link to='/' class={"nav-item nav-link " + this.active('/')} onClick={this.toggleCollapse.bind(this)}>Home </Link>
+                 <Link to='triggers' class={"nav-item nav-link " + this.active('/triggers')} onClick={this.toggleCollapse.bind(this)}>Triggers</Link>
+                 <Link to='blueprints' class={"nav-item nav-link " + this.active('/blueprints')} onClick={this.toggleCollapse.bind(this)}>Blueprints</Link>
+                 <Link to='instances' class={"nav-item nav-link " + this.active('/instances')} onClick={this.toggleCollapse.bind(this)}>Instances</Link>
+             </div>
           </div>
-          <div class={"navbar-collapse " + navClass} id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-              <li class={featuredClass}>
-                <Link to="/" onClick={this.toggleCollapse.bind(this)}>Todos</Link>
-              </li>
-              <li class={archivesClass}>
-                <Link to="favorites" onClick={this.toggleCollapse.bind(this)}>Favorites</Link>
-              </li>
-              <li class={settingsClass}>
-                <Link to="settings" onClick={this.toggleCollapse.bind(this)}>Settings</Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-    );
+       </nav>
+    )
   }
 }
