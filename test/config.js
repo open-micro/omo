@@ -1,10 +1,6 @@
 const path        = require('path')
 const portfinder  = require('portfinder')
 const db          = require('../app/utils/db')
-const Trigger     = require('../app/models/trigger')
-const Cron        = require('../app/models/cron')
-const Blueprint   = require('../app/models/blueprint')
-const Instance    = require('../app/models/instance')
 const queue       = require('../app/utils/queue')
 
 const mockery     = require('mockery')
@@ -19,11 +15,7 @@ config.detachedInterval = 10
 config.mock = true
 
 config.dbTrunc = async () =>  {
-  db_con = await db.connect()
-  await Trigger.remove({})
-  await Cron.remove({})
-  await Blueprint.remove({})
-  await Instance.remove({})
+  await db.trunc()
 }
 
 config.queueTrunc = async () => {

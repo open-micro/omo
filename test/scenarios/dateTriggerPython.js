@@ -121,7 +121,7 @@ describe('trigger a blueprint instance which runs a python script', function() {
   it ('make sure instance errored', function(done) {
     setTimeout(() => {
       var options = {
-        uri: 'http://localhost:' + config.port + '/instance/error',
+        uri: 'http://localhost:' + config.port + '/instance/error/all',
         json: true
       }
       request(options).then((body) => {

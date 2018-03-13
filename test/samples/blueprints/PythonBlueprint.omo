@@ -1,0 +1,18 @@
+{
+  "model": "blueprint",
+  "name": "Python",
+  "version": "0.1",
+  "tasks": [{"name": "twoSecPython",
+            "type": "exec",
+            "config": {"command": "python3",
+                       "path": {"main": "test/samples/exec/twoSec.py",
+                                "relative": "true"}
+                      }
+            }, {"name": "twoSecPython",
+                "type": "exec",
+                "config": {"command": "python3",
+                            "path": {"main": "test/samples/exec/twoSec.py",
+                                    "relative": "true"}
+                          }
+            }]
+}

@@ -1,9 +1,8 @@
 const mongoose    = require('mongoose')
 const Schema      = mongoose.Schema
-const Blueprint   = require('./blueprint') // make sure model has been compiled
 
 const InstanceSchema = new Schema({
-  created: Date,
+  created: { type: Date, default: Date.now },
   updated: Date,
   currentStep: {type: Number,
                 default: 0},
@@ -13,7 +12,7 @@ const InstanceSchema = new Schema({
      default: 'ready'
   },
   blueprint: {type: Schema.Types.ObjectId,
-            ref: 'Blueprint'},
+              ref: 'Blueprint'},
   initialContext: {type: Schema.Types.Mixed,
                     default: {}
                   },
@@ -25,12 +24,17 @@ const InstanceSchema = new Schema({
   nextCheck: Date
 })
 
+InstanceSchema.pre('init', function (next) {
+  this.update({},{ $set: { updated: Date.now() } })
+})
+
 InstanceSchema.pre('save', function (next) {
-  let date = new Date()
-  if (!this.created)
-    this.created = date
-  this.updated = date
+  this.updated = Date.now()
   next()
+})
+
+InstanceSchema.pre('update', function() {
+  this.update({},{ $set: { updated: Date.now() } })
 })
 
 module.exports = mongoose.model('Instance', InstanceSchema)

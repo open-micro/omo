@@ -3,6 +3,16 @@ const workClient  = require('../utils/work')
 const util        = require('util')
 const logger      = require('../utils/logger')('trigger DAO')
 
+const copyFields = (updateMe, trigger) => {
+  updateMe.model = trigger.model
+  updateMe.version = trigger.version
+  updateMe.type = trigger.type
+  updateMe.auto = trigger.auto
+  updateMe.started = trigger.started
+  updateMe.config = trigger.config
+  updateMe.lastFired = trigger.lastFired
+}
+
 const create = async (trigger) => {
   if (trigger.auto) {
     trigger.started = true
@@ -16,12 +26,15 @@ const create = async (trigger) => {
 }
 
 const update = async (trigger) => {
-  if (trigger.auto) {
-    trigger.started = true
-  }
-  trigger = await Trigger.findOneAndUpdate({name:trigger.name}, trigger)
-  if (trigger.auto) {
-    await workClient.addTrigger(trigger)
+  let updateMe = await Trigger.findOne({name: trigger.name})
+  if (updateMe) {
+    copyFields(updateMe, trigger)
+    trigger = await updateMe.save()
+    logger.debug('update updated trigger: ' + util.inspect(trigger))
+
+    return trigger
+  } else {
+    logger.warn('update could not find trigger: ' + trigger.name)
   }
 }
 
@@ -30,15 +43,21 @@ const upsert = async (trigger) => {
     trigger.started = true
   }
 
-  if (!await Trigger.findOneAndUpdate({name: trigger.name}, trigger, {new: true})) {
-    logger.debug('upsert creating trigger: ' + trigger.name)
-    trigger = create(trigger)
-    logger.debug(util.inspect(trigger))
+  let updateMe = await Trigger.findOne({name: trigger.name})
+  if (updateMe) {
+    copyFields(updateMe, trigger)
+    trigger = await updateMe.save()
+    logger.debug('upsert updated trigger: ' + util.inspect(trigger))
+  } else {
+    trigger = await Trigger.create(trigger)
+    logger.debug('upsert created trigger: ' + util.inspect(trigger))
   }
 
   if (trigger.auto) {
     await workClient.addTrigger(trigger)
   }
+
+  return trigger
 }
 
 const startByName = async (name) => {

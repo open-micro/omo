@@ -1,6 +1,7 @@
 const mongoose  = require('mongoose')
+const util      = require('util')
 const config    = require('../../config/config')
-const logger    = require('./logger')
+const logger    = require('./logger')('mongoose')
 
 if (config.logLevel === 'debug') {
   mongoose.set('debug', function(coll, method, query, doc, options) {
@@ -12,9 +13,7 @@ if (config.logLevel === 'debug') {
           options: options
       };
 
-//      logger.debug({
-//          dbQuery: set
-//      })
+     //logger.debug(util.inspect(set))
   })
 }
 

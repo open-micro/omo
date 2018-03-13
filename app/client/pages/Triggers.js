@@ -2,6 +2,7 @@ import React          from "react"
 import { Table }      from 'reactstrap'
 import axios          from 'axios'
 import TriggerItem    from '../components/TriggerItem'
+import AlertStore     from '../stores/AlertStore'
 
 export default class Triggers extends React.Component {
   constructor(props) {
@@ -24,8 +25,12 @@ export default class Triggers extends React.Component {
        <thead>
          <tr>
            <th>Name</th>
-           <th>Version</th>
            <th>Updated</th>
+           <th>Auto</th>
+           <th>Config</th>
+           <th>Started</th>
+           <th>Last Fired</th>
+           <th>Next Fire</th>
            <th>Manage</th>
          </tr>
        </thead>

@@ -1,6 +1,8 @@
 const workClient        = require('../utils/work')
 const db                = require('../utils/db')
-const {create, remove}  = require('../dao/cron')
+const { update }        = require('../dao/trigger')
+const cronUpsert        = require('../dao/cron').upsert
+const cronRemove        = require('../dao/cron').remove
 const cronParser        = require('cron-parser')
 const util              = require('util')
 const logger            = require('../utils/logger')('trigger worker')
@@ -28,11 +30,13 @@ const processQueue = async () => {
         nextFire: next_fire,
         trigger: trigger
       }
-      let cron = await create(new_cron)
+      let cron = await cronUpsert(new_cron) // update next_fire for cron
+      trigger.cron = cron._id
+      await update(trigger)
       logger.debug('cron added: ' + util.inspect(cron))
     } else {
       logger.debug('stopping trigger: ' + trigger.name)
-      await remove({trigger: trigger._id})
+      await cronRemove({trigger: trigger._id})
     }
 
     logger.debug('acking message')

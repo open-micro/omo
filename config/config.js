@@ -35,13 +35,13 @@ var config = {
     detachedInterval: detached_interval
   },
 
-  production: {
+  PROD: {
     root: rootPath,
     app: {
       name: 'omo'
     },
     port: port,
-    logLevel: log_level || 'crit',
+    logLevel: log_level || 'warn',
     db: 'mongodb://localhost/omo-production',
     schedulerTick: scheduler_tick,
     schedulerInterval: scheduler_interval,

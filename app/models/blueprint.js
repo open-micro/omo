@@ -8,7 +8,7 @@ const BlueprintSchema = new Schema({
      required: true,
      enum: ['blueprint', 'Blueprint']
   },
-  created: Date,
+  created: { type: Date, default: Date.now },
   updated: Date,
   name: { type: String, unique: true },
   version: {type: Number,
@@ -18,12 +18,17 @@ const BlueprintSchema = new Schema({
   tasks: [Schema.Types.Mixed]
 })
 
+BlueprintSchema.pre('init', function (next) {
+  this.update({},{ $set: { updated: Date.now() } })
+})
+
 BlueprintSchema.pre('save', function (next) {
-  let date = new Date()
-  if (!this.created)
-    this.created = date
-  this.updated = date
+  this.updated = Date.now()
   next()
+})
+
+BlueprintSchema.pre('update', function() {
+  this.update({},{ $set: { updated: Date.now() } })
 })
 
 module.exports = mongoose.model('Blueprint', BlueprintSchema)

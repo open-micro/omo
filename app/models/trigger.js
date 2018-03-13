@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const Cron = require('./cron')
 
 const TriggerSchema = new Schema({
   model: {
@@ -7,7 +8,7 @@ const TriggerSchema = new Schema({
      required: true,
      enum: ['trigger', 'Trigger']
   },
-  created: Date,
+  created: { type: Date, default: Date.now },
   updated: Date,
   name: { type: String, unique: true },
   version: {
@@ -27,15 +28,22 @@ const TriggerSchema = new Schema({
      type: Boolean,
      default: false
   },
-  lastFired: Date
+  lastFired: Date,
+  cron: {type: Schema.Types.ObjectId,
+            ref: 'Cron'}
+})
+
+TriggerSchema.pre('init', function (next) {
+  this.update({},{ $set: { updated: Date.now() } })
 })
 
 TriggerSchema.pre('save', function (next) {
-  let date = new Date()
-  if (!this.created)
-    this.created = date
-  this.updated = date
+  this.updated = Date.now()
   next()
+})
+
+TriggerSchema.pre('update', function() {
+  this.update({},{ $set: { updated: Date.now() } })
 })
 
 module.exports = mongoose.model('Trigger', TriggerSchema)

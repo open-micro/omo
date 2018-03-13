@@ -173,7 +173,7 @@ describe('date triggers', function() {
     done()
   })
 
-  it ('udpate blueprint to fire for auto trigger', function(done) {
+  it ('update blueprint to fire for auto trigger', function(done) {
     blueprint.triggerName = date_trigger.name
     let options = {
       method: 'PUT',

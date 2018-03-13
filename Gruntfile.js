@@ -11,6 +11,11 @@ module.exports = (grunt) => {
 
   let files;
 
+  process.env.AUTO = true
+  //process.env.TRUNCDB = true
+  process.env.AUTOLOAD = true
+  process.env.AUTOLOAD_DIR = './test/samples'
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     develop: {

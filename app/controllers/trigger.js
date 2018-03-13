@@ -9,7 +9,7 @@ module.exports = (app) => {
 
 router.get('/', async (req, res, next) => {
   try {
-    res.json(await find())
+    res.json(await find({}, 'cron'))
   } catch (err) {
     next(err)
   }
@@ -17,7 +17,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/name/:name', async (req, res, next) => {
   try {
-    res.json(await findOne({name: req.params.name}))
+    res.json(await findOne({name: req.params.name}, 'cron'))
   } catch (err) {
     next(err)
   }

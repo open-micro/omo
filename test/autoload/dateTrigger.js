@@ -1,10 +1,10 @@
-const config  = require('../../config.js')
-const Cron    = require('../../../app/models/cron')
+const config  = require('../config.js')
+const Cron    = require('../../app/models/cron')
 const path    = require('path')
 const fs      = require('fs')
 const request = require('request-promise')
 const assert  = require('chai').assert
-const Instance = require('../../../app/dao/instance')
+const Instance = require('../../app/dao/instance')
 
 var cron_trigger, trigger_id, blueprint
 
@@ -19,26 +19,28 @@ describe('date triggers autoload', function() {
   })
 
   before(function(done) {
-    console.log(111)
-    var index = require("../../../index")
-    index.start(true).then(function(s) {
+    process.env.AUTOLOAD = true
+    process.env.AUTOLOAD_DIR = './test/samples'
+    require("../../index").run().then((s) => {
       server = s
       done()
     }, done)
   })
 
   after(function(done) {
+    delete process.env.AUTOLOAD
+    delete process.env.AUTOLOAD_DIR
     server.close()
     done()
   })
 
   it ('read and parse date trigger', function(done) {
-    date_trigger = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'omo', 'DateTrigger.omo')))
+    date_trigger = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'test', 'samples', 'triggers', 'DateTrigger.omo')))
     done()
   })
 
   it ('read blueprint to be triggered', function(done) {
-    blueprint = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'omo', 'CronBlueprint.omo')))
+    blueprint = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'test', 'samples', 'blueprints', 'CronBlueprint.omo')))
     done()
   })
 
@@ -107,7 +109,7 @@ describe('date triggers autoload', function() {
           done()
         }, done)
       }, done)
-    }, 1000)
+    }, 5000)
   })
 
   it ('stop date trigger by name', function(done) {
@@ -127,11 +129,13 @@ describe('date triggers autoload', function() {
       uri: 'http://localhost:' + config.port + '/trigger/name/' + date_trigger.name,
       json: true
     }
-    request(options).then((body) => {
-      assert.equal(body.name, date_trigger.name)
-      assert.equal(body.started, false)
-      done()
-    }, done)
+    setTimeout(() => {
+      request(options).then((body) => {
+        assert.equal(body.name, date_trigger.name)
+        assert.equal(body.started, false)
+        done()
+      }, done)
+    }, 2000)
   })
 
   it ('make sure Cron document was deleted for the trigger', function(done) {
@@ -140,6 +144,6 @@ describe('date triggers autoload', function() {
         assert(!cron_obj, "Cron document not deleted for trigger")
         done()
       }, done)
-    }, 1000)
+    }, 5000)
   })
 })

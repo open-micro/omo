@@ -3296,6 +3296,12 @@ grunt-legacy-util@~1.0.0:
     underscore.string "~3.2.3"
     which "~1.2.1"
 
+grunt-run@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/grunt-run/-/grunt-run-0.8.0.tgz#02fc86c82ec71dbcd4a9c20cb8673dfa785c5aa3"
+  dependencies:
+    strip-ansi "^3.0.0"
+
 grunt-webpack@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/grunt-webpack/-/grunt-webpack-3.0.2.tgz#bcfdea313d431e79b6fc18c42040b48dfac9d32f"

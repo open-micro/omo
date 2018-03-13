@@ -15,6 +15,7 @@ process.on('unhandledRejection', err => {
 })
 
 const env = process.env.NODE_ENV || 'development'
+const AUTO = process.env.AUTO
 
 var queue
 
@@ -29,7 +30,7 @@ module.exports = () => {
     })
 
     // worker management management (dev only)
-    if (env === 'development') {
+    if (env === 'development' || AUTO) {
       logger.info('Setting up development support')
       require('./app/utils/queue').createAllQueues(db)
 

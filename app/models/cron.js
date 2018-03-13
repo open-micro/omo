@@ -7,15 +7,21 @@ const CronSchema = new Schema({
   updated: Date,
   nextFire: Date,
   trigger: {type: Schema.Types.ObjectId,
-            ref: 'Trigger'}
+            ref: 'Trigger',
+            required: true}
+})
+
+CronSchema.pre('init', function (next) {
+  this.update({},{ $set: { updated: Date.now() } })
 })
 
 CronSchema.pre('save', function (next) {
-  let date = new Date()
-  if (!this.created)
-    this.created = date
-  this.updated = date
+  this.updated = Date.now()
   next()
+})
+
+CronSchema.pre('update', function() {
+  this.update({},{ $set: { updated: Date.now() } })
 })
 
 module.exports = mongoose.model('Cron', CronSchema)
