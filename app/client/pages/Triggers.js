@@ -3,6 +3,7 @@ import { Table }      from 'reactstrap'
 import axios          from 'axios'
 import TriggerItem    from '../components/TriggerItem'
 import AlertStore     from '../stores/AlertStore'
+import TriggerStore   from '../stores/TriggerStore'
 
 export default class Triggers extends React.Component {
   constructor(props) {
@@ -10,9 +11,19 @@ export default class Triggers extends React.Component {
     this.state = {triggers: []}
   }
 
+  componentWillUnmount() {
+    TriggerStore.removeListener("triggers", this.getTriggers);
+  }
+
   componentWillMount = async () => {
+    this.getTriggers()
+    TriggerStore.on("triggers", this.getTriggers)
+  }
+
+  getTriggers = async () => {
     try {
-      this.setState({triggers: (await axios.get(window.host + '/trigger')).data})
+      let triggers = await TriggerStore.getTriggers()
+      this.setState({triggers: triggers || []})
     } catch (err) {
       console.log(err)
       AlertStore.createAlert(err)

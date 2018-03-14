@@ -11,6 +11,7 @@ const copyFields = (updateMe, trigger) => {
   updateMe.started = trigger.started
   updateMe.config = trigger.config
   updateMe.lastFired = trigger.lastFired
+  updateMe.cron = trigger.cron
 }
 
 const create = async (trigger) => {

@@ -32,9 +32,9 @@ export default class Nav extends React.Component {
            <div class={"navbar-collapse " + navClass} id="navbarCollapse">
               <div class="navbar-nav">
                  <Link to='/' class={"nav-item nav-link " + this.active('/')} onClick={this.toggleCollapse.bind(this)}>Home </Link>
-                 <Link to='triggers' class={"nav-item nav-link " + this.active('/triggers')} onClick={this.toggleCollapse.bind(this)}>Triggers</Link>
-                 <Link to='blueprints' class={"nav-item nav-link " + this.active('/blueprints')} onClick={this.toggleCollapse.bind(this)}>Blueprints</Link>
-                 <Link to='instances' class={"nav-item nav-link " + this.active('/instances')} onClick={this.toggleCollapse.bind(this)}>Instances</Link>
+                 <Link to='/triggers' class={"nav-item nav-link " + this.active('/triggers')} onClick={this.toggleCollapse.bind(this)}>Triggers</Link>
+                 <Link to='/blueprints' class={"nav-item nav-link " + this.active('/blueprints')} onClick={this.toggleCollapse.bind(this)}>Blueprints</Link>
+                 <Link to='/instances' class={"nav-item nav-link " + this.active('/instances')} onClick={this.toggleCollapse.bind(this)}>Instances</Link>
              </div>
           </div>
        </nav>

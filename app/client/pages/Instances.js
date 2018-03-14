@@ -3,6 +3,7 @@ import { Table }      from 'reactstrap'
 import axios          from 'axios'
 import InstanceItem   from '../components/InstanceItem'
 import AlertStore     from '../stores/AlertStore'
+import Instance       from './Instance'
 
 export default class Instances extends React.Component {
   constructor(props) {
@@ -27,8 +28,8 @@ export default class Instances extends React.Component {
            <th>Blueprint</th>
            <th>Started</th>
            <th>Updated</th>
-           <th>Status</th>
            <th>Current Step</th>
+           <th>Manage</th>
          </tr>
        </thead>
        <tbody>

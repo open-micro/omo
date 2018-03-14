@@ -36,8 +36,8 @@ const config = {
        use: [{loader: 'babel-loader',
            options: {
              cacheDirectory: true,
-             plugins: ['react-html-attrs', 'transform-class-properties', 'transform-decorators-legacy'],
-             presets: ['react', 'es2015'] // Transpiles JSX and ES6
+             plugins: ['react-html-attrs', 'transform-class-properties', 'transform-decorators-legacy', 'syntax-object-rest-spread'],
+             presets: ['react', 'es2016'] // Transpiles JSX and ES6
            }
          }]
      }
