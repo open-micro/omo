@@ -1,7 +1,10 @@
-const router                        = require('express').Router()
-const {create, update,
-        startByName, stopByName,
-        find, findOne}              = require('../dao/trigger')
+const router                   = require('express').Router()
+const { create,
+        update,
+        startByName,
+        stopByName,
+        find,
+        findOne }              = require('../dao/trigger')
 
 module.exports = (app) => {
   app.use('/trigger', router)

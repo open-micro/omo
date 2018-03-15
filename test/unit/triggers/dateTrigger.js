@@ -38,7 +38,7 @@ describe('date triggers', function() {
   })
 
   it ('read blueprint to be triggered', function(done) {
-    blueprint = JSON.parse(fs.readFileSync(path.join(config.samplesDir, 'blueprints', 'CronBlueprint.omo')))
+    blueprint = JSON.parse(fs.readFileSync(path.join(config.samplesDir, 'blueprints', 'DateBlueprint.omo')))
     done()
   })
 

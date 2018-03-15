@@ -25,7 +25,7 @@ const update = async (instance) => {
     updateMe.markModified('initialContext')
     updateMe.markModified('taskResults')
     updateMe.markModified('global')
-    
+
     instance = await updateMe.save()
     logger.debug('update updated instance: ' + util.inspect(instance))
 
@@ -51,4 +51,8 @@ const findOne = async (query, populate) => {
   return await q.exec()
 }
 
-module.exports = {create, update, find, findOne}
+const remove = async (params) => {
+    return await Instance.remove(params)
+}
+
+module.exports = {create, update, remove, find, findOne}

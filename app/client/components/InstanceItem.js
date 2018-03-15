@@ -22,13 +22,15 @@ export default class InstanceItem extends React.Component {
     if (this.state.status === 'error')
       badgeColor = 'danger'
 
+    let link = { pathname: 'instances/' + this.state._id, state: { instance: this.state} }
+
     return (
      <tr>
        <th scope="row"><Badge color={badgeColor}>{this.state.status}</Badge> {this.state.blueprint.name}</th>
        <td>{dateformat(this.state.created, config.dateFormat)}</td>
        <td>{timeAgo(new Date(this.props.updated))}</td>
        <td>{this.props.currentStep}</td>
-       <td><Button tag={Link} to={'instances/' + this.state._id} color="primary">view</Button>
+       <td><Button outline={true} tag={Link} to={link} color="primary">view</Button>
        </td>
      </tr>
     )

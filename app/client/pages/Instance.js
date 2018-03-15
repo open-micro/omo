@@ -1,49 +1,111 @@
-import React from 'react'
+import React               from 'react'
 import { Container,
           Row,
-          Col } from 'reactstrap'
+          Col,
+          Badge,
+          Button,
+          CardBody,
+          CardTitle,
+          CardSubtitle,
+          CardText,
+          Modal,
+          ModalHeader,
+          ModalBody,
+          ModalFooter}      from 'reactstrap'
+import dateformat           from 'dateformat'
+import timeAgo              from 'epoch-timeago'
+import config               from '../config'
+import JsModal              from "../components/JsModal"
+import * as ApiDispatcher   from '../actions/ApiActions'
 
 export default class Instance extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {...props}
+    this.state = {...props.location.state.instance}
+    this.state.modal = false
+  }
+
+  modalToggle = () => {
+    this.setState({
+      modal: !this.state.modal
+    })
+  }
+
+  deleteConfirm = () => {
+    ApiDispatcher.dispatch('DELETE_INSTANCE', this.state._id)
+    this.modalToggle()
+    this.props.history.goBack()
   }
 
   render() {
+    let badgeColor = 'primary'
+    if (this.state.status === 'done')
+      badgeColor = 'secondary'
+    if (this.state.status === 'error')
+      badgeColor = 'danger'
+
     return (
       <Container>
         <Row>
-          <Col>.col</Col>
-        </Row>
-        <Row>
-          <Col>.col</Col>
-          <Col>.col</Col>
-          <Col>.col</Col>
-          <Col>.col</Col>
-        </Row>
-        <Row>
-          <Col xs="3">.col-3</Col>
-          <Col xs="auto">.col-auto - variable width content</Col>
-          <Col xs="3">.col-3</Col>
-        </Row>
-        <Row>
-          <Col xs="6">.col-6</Col>
-          <Col xs="6">.col-6</Col>
-        </Row>
-        <Row>
-          <Col xs="6" sm="4">.col-6 .col-sm-4</Col>
-          <Col xs="6" sm="4">.col-6 .col-sm-4</Col>
-          <Col sm="4">.col-sm-4</Col>
-        </Row>
-        <Row>
-          <Col sm={{ size: 6, order: 2, offset: 1 }}>.col-sm-6 .col-sm-order-2 .col-sm-offset-2</Col>
-        </Row>
-        <Row>
-          <Col sm="12" md={{ size: 8, offset: 2 }}>.col-sm-12 .col-md-6 .col-md-offset-3</Col>
-        </Row>
-        <Row>
-          <Col sm={{ size: 'auto', offset: 1 }}>.col-sm .col-sm-offset-1</Col>
-          <Col sm={{ size: 'auto', offset: 1 }}>.col-sm .col-sm-offset-1</Col>
+          <Col md="3">
+          <CardBody className={'border border-secondary'}>
+            <Row>
+              <Col>
+                <Badge color={badgeColor}>{this.state.status}</Badge> <b>Instance ID:</b> {this.state._id}
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                 <b>Blueprint:</b> {this.state.blueprint.name}
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                 <b>Started:</b> {dateformat(this.state.created, config.dateFormat)}
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                 <b>Last Updated:</b> {timeAgo(new Date(this.state.created))}
+              </Col>
+            </Row>
+            <Row style={{marginTop:'20px'}}>
+              <Col>
+                <Button outline={true} color={'danger'} onClick={this.modalToggle}>delete</Button>
+                <Modal isOpen={this.state.modal} toggle={this.modalToggle}>
+                  <ModalHeader>Instance Delete</ModalHeader>
+                  <ModalBody>Delete instance ({this.state._id})?</ModalBody>
+                  <ModalFooter>
+                    <Button color="danger" onClick={this.deleteConfirm}>Confirm</Button>{' '}
+                    <Button color="secondary" onClick={this.modalToggle}>Cancel</Button>
+                  </ModalFooter>
+                </Modal>
+              </Col>
+            </Row>
+          </CardBody>
+        </Col>
+          <Col lg="auto">
+            <Row>
+              <Col>
+                <CardBody className={'border border-secondary'}>
+                  <CardTitle>Initial Context</CardTitle>
+                  <JsModal js={this.state.initialContext || {}} title={'view'}/>
+                </CardBody>
+              </Col>
+              <Col>
+                <CardBody className={'border border-secondary'}>
+                  <CardTitle>Global Document</CardTitle>
+                  <JsModal js={this.state.global || {}} title={'view'}/>
+                </CardBody>
+              </Col>
+              <Col>
+                <CardBody className={'border border-secondary'}>
+                  <CardTitle>Task Results</CardTitle>
+                  <JsModal js={this.state.taskResults || {}} title={'view'}/>
+                </CardBody>
+              </Col>
+            </Row>
+          </Col>
         </Row>
       </Container>
     )

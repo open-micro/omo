@@ -32,7 +32,7 @@ class TriggerStore extends EventEmitter {
         setTimeout(async () => {
           let trigger = await this.getTrigger(action.name)
           this.emit("trigger", trigger)
-        }, 2000)
+        }, 3000)
         break;
       }
       case "STOP_TRIGGER": {
@@ -40,7 +40,7 @@ class TriggerStore extends EventEmitter {
         setTimeout(async () => {
           let trigger = await this.getTrigger(action.name)
           this.emit("trigger", trigger)
-        }, 2000)
+        }, 3000)
         break;
       }
     }

@@ -38,8 +38,6 @@ export default class Example extends React.Component {
   }
 
   render() {
-    console.log('RENDER')
-    console.log(this.state)
     return (
       <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
         <DropdownToggle caret color={this.state.color} disabled={this.state.disabled}>

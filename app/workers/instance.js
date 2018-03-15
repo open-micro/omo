@@ -57,14 +57,20 @@ const processInstances = async () => {
     // ready instances
     let instances = await Instance.find({status: 'ready'}, 'blueprint')
     instances.forEach(async (instance) => {
-      while (instance.status === 'ready' && instance.blueprint.tasks[instance.currentStep]) {
-        logger.debug('processing instance of blueprint ' + instance.blueprint.name)
-        if (instance.blueprint.tasks[instance.currentStep].type === 'exec') {
-          logger.debug('processing exec task for ' + instance.blueprint.name + ' task ' + instance.currentStep)
-          instance.status = 'processing'
-          await instance.save()
-          await execHandler.processExec(instance) // process exec task
-          updateInstanceStatus(instance) // update instance for next processing
+      while (instance.status === 'ready') {
+        if (instance.blueprint.tasks[instance.currentStep]) { // task available to process
+          logger.debug('processing instance of blueprint ' + instance.blueprint.name)
+          if (instance.blueprint.tasks[instance.currentStep].type === 'exec') {
+            logger.debug('processing exec task for ' + instance.blueprint.name + ' task ' + instance.currentStep)
+            instance.status = 'processing'
+            await instance.save()
+            await execHandler.processExec(instance) // process exec task
+            updateInstanceStatus(instance) // update instance for next processing
+            await instance.save()
+          }
+        } else { // ready but not tasks to processing
+          logger.debug('no tasks to process for instance ' + instance.id)
+          instance.status = 'done'
           await instance.save()
         }
       }

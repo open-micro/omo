@@ -3,6 +3,7 @@ import { Table }      from 'reactstrap'
 import axios          from 'axios'
 import BlueprintItem  from '../components/BlueprintItem'
 import AlertStore     from '../stores/AlertStore'
+import BlueprintStore  from '../stores/BlueprintStore'
 
 export default class Blueprints extends React.Component {
   constructor(props) {
@@ -10,7 +11,16 @@ export default class Blueprints extends React.Component {
     this.state = {blueprints: []}
   }
 
+  componentWillUnmount() {
+    BlueprintStore.removeListener("blueprints", this.getBlueprints)
+  }
+
   componentWillMount = async () => {
+    this.getBlueprints()
+    BlueprintStore.on("blueprints", this.getBlueprints)
+  }
+
+  getBlueprints = async () => {
     try {
       this.setState({blueprints: (await axios.get(window.host + '/blueprint')).data})
     } catch (err) {
@@ -18,14 +28,13 @@ export default class Blueprints extends React.Component {
       AlertStore.createAlert(err)
     }
   }
-
   render() {
     return (
       <Table>
        <thead>
          <tr>
            <th>Name</th>
-           <th>Version</th>
+           <th>Trigger</th>
            <th>Updated</th>
            <th>Manage</th>
          </tr>

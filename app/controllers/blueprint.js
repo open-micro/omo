@@ -1,6 +1,9 @@
-const router                             = require('express').Router()
-const {create, update, find, findOne}    = require('../dao/blueprint')
-const instanceCreate                     = require('../dao/instance').create
+const router                           = require('express').Router()
+const { create,
+        update,
+        find,
+        findOne }                      = require('../dao/blueprint')
+const instanceCreate                   = require('../dao/instance').create
 
 module.exports = (app) => {
   app.use('/blueprint', router)
@@ -22,10 +25,18 @@ router.get('/name/:name', async (req, res, next) => {
   }
 })
 
-router.get('/start/:name', async (req, res, next) => {
+router.post('/start/name/:name', async (req, res, next) => {
   try {
     let blueprint = await findOne({name: req.params.name})
     res.json(await instanceCreate({blueprint: blueprint._id}))
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.post('/start/id/:id', async (req, res, next) => {
+  try {
+    res.json(await instanceCreate({blueprint: req.params.id}))
   } catch (err) {
     next(err)
   }

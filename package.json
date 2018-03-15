@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "auto": "AUTO=true AUTOLOAD=true AUTOLOAD_DIR='./test/samples' node index.js",
+    "auto": "AUTO=true AUTOLOAD=true TRUNCDB=true AUTOLOAD_DIR='./test/samples' node index.js",
     "web-dev": "webpack-dev-server --host 0.0.0.0 --inline --hot",
     "test": "mocha test --recursive --timeout 10000 --exit --bail",
     "test:coverage": "nyc npm test",
