@@ -56,3 +56,11 @@ router.get('/error/all', async (req, res, next) => {
     next(err)
   }
 })
+
+router.post('/fileDownload', async (req, res, next) => {
+  try {
+    res.download(req.body.file)
+  } catch (err) {
+    next(err)
+  }
+})

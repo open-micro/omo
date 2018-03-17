@@ -37,7 +37,7 @@ export default class JsModal extends React.Component {
   render() {
     return (
       <div>
-        <Button outline={true} color="primary" onClick={this.toggle}>View</Button>
+        <Button outline={true} color="primary" onClick={this.toggle}>{this.state.label || 'view'}</Button>
         <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
           <ModalHeader toggle={this.toggle}>{this.state.title}</ModalHeader>
           <ModalBody>

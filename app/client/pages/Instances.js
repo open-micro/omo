@@ -22,21 +22,37 @@ export default class Instances extends React.Component {
   }
 
   componentWillUnmount() {
-    InstanceStore.removeListener("instances", this.getInstances);
+    InstanceStore.removeListener("instances", this.setInstances)
+    this.state.pollInstances = false
   }
 
   componentWillMount = async () => {
-    this.getInstances()
-    InstanceStore.on("instances", this.getInstances)
+    this.setInstances(await InstanceStore.fetchInstances())
+    InstanceStore.on("instances", this.setInstances)
+    this.setState({pollInstances: true})
+    this.pollInstances()
   }
 
-  getInstances = async () => {
-    try {
-      this.setState({instances: (await axios.get(window.host + '/instance')).data})
-    } catch (err) {
-      console.log(err)
-      AlertStore.createAlert(err)
+  setInstances = (instances) => {
+    console.log(instances)
+    if (!instances)
+      console.log('NO INSTANCES')
+    else {
+      this.setState({instances: instances})
+      instances.forEach((instance) => {
+        if (this.refs[instance._id]) {
+          this.refs[instance._id].update(instance)
+        }
+      })
     }
+  }
+
+  pollInstances = () => {
+      setTimeout(() => {
+        ApiDispatcher.dispatch('UPDATE_INSTANCES')
+        if (this.state.pollInstances)
+          this.pollInstances()
+      }, 2000)
   }
 
   modalToggle = () => {
@@ -77,7 +93,7 @@ export default class Instances extends React.Component {
                </tr>
              </thead>
              <tbody>
-              {this.state.instances.map((instance) => <InstanceItem key={instance._id} {...instance}/>)}
+              {this.state.instances.map((instance) => <InstanceItem ref={instance._id} key={instance._id} {...instance}/>)}
              </tbody>
            </Table>
           </Col>

@@ -13,7 +13,7 @@ export default class Alert extends React.Component {
   }
 
   componentWillUnmount() {
-    TodoStore.removeListener("alert", this.newAlert);
+    AlertStore.removeListener("alert", this.newAlert);
   }
 
   newAlert = () => {

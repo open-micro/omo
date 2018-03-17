@@ -5,10 +5,20 @@ import axios            from "axios"
 class InstanceStore extends EventEmitter {
   constructor() {
     super()
+
+    this.instances = []
   }
 
-  getInstances = async () => {
-    return (await axios.get(window.host + '/instance')).data
+  fetchInstances = async () => {
+    let res = await axios.get(window.host + '/instance')
+    if (res) {
+      this.instances = res.data
+    }
+    return res.data
+  }
+
+  getInstances = () => {
+    return this.instances
   }
 
   getInstance = async (name) => {
@@ -36,8 +46,12 @@ class InstanceStore extends EventEmitter {
   }
 
   handleActions = async (action) => {
-    console.log(action)
     switch(action.type) {
+      case "UPDATE_INSTANCES": {
+        await this.fetchInstances()
+        this.emit("instances", this.getInstances())
+        break;
+      }
       case "START_INSTANCE": {
         await this.startInstance(action.name)
         setTimeout(async () => {

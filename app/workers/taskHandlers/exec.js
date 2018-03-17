@@ -59,14 +59,19 @@ const processExec = async (instance) => {
     let child_proc = execa(command, args, options)
     child_proc.unref()
     instance.status = 'detached'
-    instance.taskResults[instance.currentStep] = detach_proc_log
+    instance.taskResults[instance.currentStep] = {}
+    instance.taskResults[instance.currentStep].status = 'detached'
+    instance.taskResults[instance.currentStep].type = 'file'
+    instance.taskResults[instance.currentStep].data = detach_proc_log
     instance.markModified('taskResults')
     return Promise.resolve()
   } else {
     logger.debug('starting attached command')
     return execa(command, args, options).then((result) => {
       logger.debug('command result: ' + util.inspect(result))
-      instance.taskResults[instance.currentStep] = result
+      instance.taskResults[instance.currentStep] = {}
+      instance.taskResults[instance.currentStep].status = 'success'
+      instance.taskResults[instance.currentStep].data = result
       instance.markModified('taskResults')
       instance.status = 'ready'
       logger.debug('setting instance status = ready')
@@ -75,6 +80,8 @@ const processExec = async (instance) => {
     }, (err) => {
       logger.debug('error processing command: ' + err)
       error.instanceError(instance, err)
+      instance.taskResults[instance.currentStep].status = 'error'
+      instance.taskResults[instance.currentStep].data = err
       logger.debug('setting instance status = error')
 
       return Promise.resolve()
@@ -89,13 +96,18 @@ const processDetached = async (instance) => {
     if (parseInt(file, 10) !== 0) {
       logger.debug('detached exec for step ' + instance.currentStep + ' returned exit code ' + file)
       instance.status = 'error'
+      instance.taskResults[instance.currentStep].status = 'error'
+      instance.markModified('taskResults')
       logger.debug('setting instance status = error')
     } else {
       logger.debug('detached exec for step ' + instance.currentStep + ' returned success code ' + file)
+      instance.taskResults[instance.currentStep].status = 'success'
+      instance.markModified('taskResults')
       instance.status = 'ready'
       logger.debug('setting instance status = ready')
     }
   } catch (err) {
+    console.log(err)
     logger.debug('no such file: ' + ex)
     instance.nextCheck = detachedInstanceCheckDate()
   }

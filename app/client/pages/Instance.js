@@ -11,11 +11,13 @@ import { Container,
           Modal,
           ModalHeader,
           ModalBody,
-          ModalFooter}      from 'reactstrap'
+          ModalFooter,
+          Table }           from 'reactstrap'
 import dateformat           from 'dateformat'
 import timeAgo              from 'epoch-timeago'
 import config               from '../config'
-import JsModal              from "../components/JsModal"
+import JsModal              from '../components/JsModal'
+import TaskResult           from '../components/TaskResult'
 import * as ApiDispatcher   from '../actions/ApiActions'
 
 export default class Instance extends React.Component {
@@ -71,6 +73,11 @@ export default class Instance extends React.Component {
             </Row>
             <Row style={{marginTop:'20px'}}>
               <Col>
+                <JsModal js={this.state} title="raw instance" label="view raw instance"/>
+              </Col>
+            </Row>
+            <Row style={{marginTop:'20px'}}>
+              <Col>
                 <Button outline={true} color={'danger'} onClick={this.modalToggle}>delete</Button>
                 <Modal isOpen={this.state.modal} toggle={this.modalToggle}>
                   <ModalHeader>Instance Delete</ModalHeader>
@@ -86,6 +93,16 @@ export default class Instance extends React.Component {
         </Col>
           <Col lg="auto">
             <Row>
+            <Col>
+              <CardBody className={'border border-secondary'}>
+                <CardTitle>Task Results</CardTitle>
+                <Table>
+                  <tbody>
+                    {this.state.taskResults.map((result, index) => <TaskResult ref={index} key={index} index={index} {...result}/>)}
+                  </tbody>
+                </Table>
+              </CardBody>
+            </Col>
               <Col>
                 <CardBody className={'border border-secondary'}>
                   <CardTitle>Initial Context</CardTitle>
@@ -96,12 +113,6 @@ export default class Instance extends React.Component {
                 <CardBody className={'border border-secondary'}>
                   <CardTitle>Global Document</CardTitle>
                   <JsModal js={this.state.global || {}} title={'view'}/>
-                </CardBody>
-              </Col>
-              <Col>
-                <CardBody className={'border border-secondary'}>
-                  <CardTitle>Task Results</CardTitle>
-                  <JsModal js={this.state.taskResults || {}} title={'view'}/>
                 </CardBody>
               </Col>
             </Row>
