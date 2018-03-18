@@ -1,1 +1,2 @@
-require('../index').run()
+#!/usr/bin/env node
+require('../index')
