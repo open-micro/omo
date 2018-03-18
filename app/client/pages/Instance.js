@@ -49,7 +49,7 @@ export default class Instance extends React.Component {
     return (
       <Container>
         <Row>
-          <Col>
+          <Col md="3">
           <CardBody className={'border border-secondary'}>
             <Row>
               <Col>
@@ -109,8 +109,6 @@ export default class Instance extends React.Component {
                   <CardTitle>Initial Context</CardTitle>
                   <JsModal js={this.state.initialContext || {}} title={'view'}/>
                 </CardBody>
-              </Col>
-              <Col>
                 <CardBody className={'border border-secondary'}>
                   <CardTitle>Global Document</CardTitle>
                   <JsModal js={this.state.global || {}} title={'view'}/>
