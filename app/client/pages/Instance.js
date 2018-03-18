@@ -49,7 +49,7 @@ export default class Instance extends React.Component {
     return (
       <Container>
         <Row>
-          <Col md="3">
+          <Col>
           <CardBody className={'border border-secondary'}>
             <Row>
               <Col>
