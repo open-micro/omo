@@ -6,7 +6,7 @@ const request = require('request-promise')
 const assert  = require('chai').assert
 const Instance = require('../../app/dao/instance')
 
-var cron_trigger, trigger_id, blueprint
+var date_trigger, trigger_id, blueprint
 
 describe('date triggers autoload', function() {
 
@@ -40,7 +40,7 @@ describe('date triggers autoload', function() {
   })
 
   it ('read blueprint to be triggered', function(done) {
-    blueprint = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'test', 'samples', 'blueprints', 'CronBlueprint.omo')))
+    blueprint = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'test', 'samples', 'blueprints', 'DateBlueprint.omo')))
     done()
   })
 
@@ -104,7 +104,7 @@ describe('date triggers autoload', function() {
           json: true
         }
         request(options).then((body) => {
-          assert(body, 'no instance for blueprint')
+          assert(body.length > 0, 'no instance for blueprint')
           assert.equal(body[0].currentStep, 0)
           done()
         }, done)

@@ -60,7 +60,8 @@ describe('blueprints', function() {
 
   it ('start blueprint by name', function(done) {
     var options = {
-      uri: 'http://localhost:' + config.port + '/blueprint/start/' + blueprint.name,
+      uri: 'http://localhost:' + config.port + '/blueprint/start/name/' + blueprint.name,
+      method: 'POST',
       json: true
     }
     request(options).then((body) => {

@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": false,
   "main": "index.js",
+  "bin": "bin/omo.js",
   "scripts": {
     "start": "node index.js",
     "auto": "AUTO=true AUTOLOAD=true TRUNCDB=true AUTOLOAD_DIR='./test/samples' node index.js",

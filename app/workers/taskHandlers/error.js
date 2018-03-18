@@ -1,9 +1,9 @@
 const instanceError = (instance, err) => {
   if (!instance.taskResults)
     instance.taskResults = []
-  instance.taskResults.push(err)
+  instance.taskResults.push({})
   instance.status = 'error'
-  instance.error = err
+  //instance.error = err
 }
 
-module.exports = {instanceError}
+module.exports = { instanceError }

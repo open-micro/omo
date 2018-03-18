@@ -62,4 +62,4 @@ const truncDB = async () => {
 }
 
 module.exports = { run,
-                   truncDB}
+                   truncDB }

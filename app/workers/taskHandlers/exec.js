@@ -82,6 +82,7 @@ const processExec = async (instance) => {
       error.instanceError(instance, err)
       instance.taskResults[instance.currentStep].status = 'error'
       instance.taskResults[instance.currentStep].data = err
+      instance.markModified('taskResults')
       logger.debug('setting instance status = error')
 
       return Promise.resolve()
@@ -107,7 +108,6 @@ const processDetached = async (instance) => {
       logger.debug('setting instance status = ready')
     }
   } catch (err) {
-    console.log(err)
     logger.debug('no such file: ' + ex)
     instance.nextCheck = detachedInstanceCheckDate()
   }
