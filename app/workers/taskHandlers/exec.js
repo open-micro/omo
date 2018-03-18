@@ -25,7 +25,7 @@ const processExec = async (instance) => {
   let command = task.config.command
   let detach = (task.config.detach === true || task.config.detach === 'true') || false
   let args = task.config.args || []
-  args.unshift(task.config.path.main)
+  args.push(task.config.path.main)
 
 
   let options = {}, relative, detach_proc_log

@@ -14,5 +14,18 @@
                             "path": {"main": "test/samples/exec/twoSec.py",
                                     "relative": "true"}
                           }
+            }, {"name": "mkdir",
+                "type": "exec",
+                "config": {"command": "mkdir",
+                            "path": {"main": "tmp",
+                                    "relative": "true"}
+                          }
+            }, {"name": "rmdir",
+                "type": "exec",
+                "config": {"command": "rm",
+                            "args": ["-rf"],
+                            "path": {"main": "tmp",
+                                    "relative": "true"}
+                          }
             }]
 }
