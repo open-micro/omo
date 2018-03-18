@@ -99,7 +99,7 @@ export default class Instance extends React.Component {
                 <Table>
                   <tbody>
                     {this.state.taskResults.map((result, index) => <TaskResult ref={index} key={index} index={index}
-                                          name={this.state.blueprint.tasks[this.state.currentStep].name} {...result}/>)}
+                                          name={this.state.blueprint.tasks[index].name} {...result}/>)}
                   </tbody>
                 </Table>
               </CardBody>
