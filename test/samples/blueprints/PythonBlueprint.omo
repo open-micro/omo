@@ -27,5 +27,13 @@
                             "path": {"main": "tmp",
                                     "relative": "true"}
                           }
+            }, {"name": "rmdir",
+                "type": "exec",
+                "config": {"command": "rm",
+                            "args": ["-rxx"],
+                            "path": {"main": "tmp",
+                                    "relative": "true"},
+                            "ignoreError": "true"
+                          }
             }]
 }

@@ -19,6 +19,16 @@ const detachedFileNames = (instance) => {
   return {com, log, ex}
 }
 
+const handleResult = (instance, result, status) => {
+  logger.debug('command result: ' + util.inspect(result))
+  instance.taskResults[instance.currentStep] = {}
+  instance.taskResults[instance.currentStep].status = status
+  instance.taskResults[instance.currentStep].data = result
+  instance.markModified('taskResults')
+  instance.status = 'ready'
+  logger.debug('setting instance status = ready')
+}
+
 const processExec = async (instance) => {
   logger.debug('processExec ')
   let task = instance.blueprint.tasks[instance.currentStep]
@@ -68,22 +78,22 @@ const processExec = async (instance) => {
   } else {
     logger.debug('starting attached command')
     return execa(command, args, options).then((result) => {
-      logger.debug('command result: ' + util.inspect(result))
-      instance.taskResults[instance.currentStep] = {}
-      instance.taskResults[instance.currentStep].status = 'success'
-      instance.taskResults[instance.currentStep].data = result
-      instance.markModified('taskResults')
-      instance.status = 'ready'
-      logger.debug('setting instance status = ready')
-
+      handleResult(instance, result, 'success')
       return Promise.resolve()
     }, (err) => {
       logger.debug('error processing command: ' + err)
-      error.instanceError(instance, err)
-      instance.taskResults[instance.currentStep].status = 'error'
-      instance.taskResults[instance.currentStep].data = err
-      instance.markModified('taskResults')
-      logger.debug('setting instance status = error')
+      if (task.config.ignoreError === true || task.config.ignoreError === 'true') {
+        logger.debug('command returned error')
+        logger.debug(err)
+        logger.debug('....ignoring')
+        handleResult(instance, err, 'error ignored')
+      } else {
+        error.instanceError(instance, err)
+        instance.taskResults[instance.currentStep].status = 'error'
+        instance.taskResults[instance.currentStep].data = err
+        instance.markModified('taskResults')
+        logger.debug('setting instance status = error')
+      }
 
       return Promise.resolve()
     })
