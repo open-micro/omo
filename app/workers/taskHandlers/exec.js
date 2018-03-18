@@ -23,14 +23,13 @@ const processExec = async (instance) => {
   logger.debug('processExec ')
   let task = instance.blueprint.tasks[instance.currentStep]
   let command = task.config.command
-  let detach = task.config.detach || false
+  let detach = (task.config.detach === true || task.config.detach === 'true') || false
   let args = task.config.args || []
   args.unshift(task.config.path.main)
 
 
   let options = {}, relative, detach_proc_log
   if (task.config.path) {
-    console.log(typeof task.config.path.relative)
     if ((typeof task.config.path.relative === 'undefined') || task.config.path.relative === true || task.config.path.relative === 'true')
       relative = process.cwd()
     else
