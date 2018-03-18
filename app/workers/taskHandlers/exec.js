@@ -16,9 +16,7 @@ const detachedFileNames = (instance) => {
   let log = '/tmp/' + root + '.log'
   let ex = '/tmp/' + root + '.exit'
 
-  return {com: com,
-          log: log,
-          ex: ex}
+  return {com, log, ex}
 }
 
 const processExec = async (instance) => {
@@ -32,9 +30,12 @@ const processExec = async (instance) => {
 
   let options = {}, relative, detach_proc_log
   if (task.config.path) {
-    relative = task.config.path.relative || true   // default = relative to cwd
-    if (relative)
-      options['cwd'] = process.cwd()
+    console.log(typeof task.config.path.relative)
+    if ((typeof task.config.path.relative === 'undefined') || task.config.path.relative === true || task.config.path.relative === 'true')
+      relative = process.cwd()
+    else
+      relative = task.config.path.relative
+    options['cwd'] = relative
   }
 
   if (detach) {
