@@ -31,7 +31,6 @@
     "glob": "7.1.2",
     "heartbeats": "5.0.1",
     "history": "^4.7.2",
-    "jade": "1.11.0",
     "js-file-download": "^0.4.1",
     "jsonfile": "4.0.0",
     "method-override": "2.3.10",
