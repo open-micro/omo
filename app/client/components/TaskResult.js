@@ -36,11 +36,11 @@ export default class BlueprintItem extends React.Component {
     return (
         <tr>
           <td>
-            {'task ' + this.state.index} {this.isFile() && ('(file download)')}
+            {'task ' + this.state.index + ' (' + this.state.name + ')'}
           </td>
           {!this.isFile() && (
             <td>
-              <JsModal js={this.state.data} title={'task ' + this.state.index}/>
+              <JsModal js={this.state.data} title={'task ' + this.state.index + ' (' + this.state.name + ')'}/>
             </td>
           )}
           {this.isFile() && (

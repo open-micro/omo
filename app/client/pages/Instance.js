@@ -98,7 +98,8 @@ export default class Instance extends React.Component {
                 <CardTitle>Task Results</CardTitle>
                 <Table>
                   <tbody>
-                    {this.state.taskResults.map((result, index) => <TaskResult ref={index} key={index} index={index} {...result}/>)}
+                    {this.state.taskResults.map((result, index) => <TaskResult ref={index} key={index} index={index}
+                                          name={this.state.blueprint.tasks[this.state.currentStep].name} {...result}/>)}
                   </tbody>
                 </Table>
               </CardBody>
