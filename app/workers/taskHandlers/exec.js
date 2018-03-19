@@ -1,6 +1,6 @@
 const execa         = require('execa')
 const util          = require('util')
-const {promisify}   = require('util');
+const { promisify } = require('util')
 const fs            = require('fs')
 const config        = require('../../../config/config')
 const error         = require('./error')
@@ -123,4 +123,5 @@ const processDetached = async (instance) => {
   }
 }
 
-module.exports = {processExec, processDetached}
+module.exports = { processExec,
+                    processDetached }

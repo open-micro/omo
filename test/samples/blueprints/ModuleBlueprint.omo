@@ -1,0 +1,16 @@
+{
+  "model": "blueprint",
+  "name": "ModuleTest",
+  "version": "0.1",
+  "tasks": [{"name": "write file",
+            "type": "module",
+            "config": {"path": {"file": "test/samples/modules/file.js",
+                                "relative": "true"}
+                      }
+            }, {"name": "validate file",
+                      "type": "module",
+                      "config": {"path": {"file": "test/samples/modules/validateFile.js",
+                                          "relative": "true"}
+                      }
+            }]
+}

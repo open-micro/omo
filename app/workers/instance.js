@@ -2,6 +2,7 @@ const Blueprint     = require('../dao/blueprint')
 const Instance      = require('../dao/instance')
 const util          = require('util')
 const execHandler   = require('./taskHandlers/exec')
+const moduleHandler = require('./taskHandlers/module')
 const logger        = require('../utils/logger')('instance worker')
 
 const fireInstancesforTrigger = async (trigger_name) => {
@@ -60,6 +61,8 @@ const processInstances = async () => {
       while (instance.status === 'ready') {
         if (instance.blueprint.tasks[instance.currentStep]) { // task available to process
           logger.debug('processing instance of blueprint ' + instance.blueprint.name)
+
+          // process exec step
           if (instance.blueprint.tasks[instance.currentStep].type === 'exec') {
             logger.debug('processing exec task for ' + instance.blueprint.name + ' task ' + instance.currentStep)
             instance.status = 'processing'
@@ -68,6 +71,17 @@ const processInstances = async () => {
             updateInstanceStatus(instance) // update instance for next processing
             await instance.save()
           }
+
+          // process module step
+          if (instance.blueprint.tasks[instance.currentStep].type === 'module') {
+            logger.debug('processing module task for ' + instance.blueprint.name + ' task ' + instance.currentStep)
+            instance.status = 'processing'
+            await instance.save()
+            await moduleHandler.processModule(instance) // process module task
+            updateInstanceStatus(instance) // update instance for next processing
+            await instance.save()
+          }
+
         } else { // ready but not tasks to processing
           logger.debug('no tasks to process for instance ' + instance.id)
           instance.status = 'done'
