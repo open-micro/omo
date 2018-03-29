@@ -1,5 +1,4 @@
 import React          from 'react'
-import ReactDOM       from 'react-dom'
 import AlertStore     from '../stores/AlertStore'
 
 export default class Alert extends React.Component {

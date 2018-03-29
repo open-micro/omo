@@ -17,6 +17,7 @@ import dateformat           from 'dateformat'
 import timeAgo              from 'epoch-timeago'
 import config               from '../config'
 import JsModal              from '../components/JsModal'
+import NbModal              from '../components/NbModal'
 import TaskResult           from '../components/TaskResult'
 import * as ApiDispatcher   from '../actions/ApiActions'
 
@@ -31,6 +32,10 @@ export default class Instance extends React.Component {
     this.setState({
       modal: !this.state.modal
     })
+  }
+
+  getInstanceRoute = () => {
+      return 'foobar'
   }
 
   deleteConfirm = () => {
