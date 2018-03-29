@@ -11,6 +11,7 @@ import AlertStore       from '../stores/AlertStore'
 export default class JsModal extends React.Component {
   constructor(props) {
     super(props)
+    this.state.js = props.js
   }
 
   loadJs = async () => {
@@ -27,7 +28,7 @@ export default class JsModal extends React.Component {
       modal: !this.state.modal
     })
 
-    if (!this.state.modal && !this.props.js)
+    if (!this.state.modal && !this.state.js)
       this.loadJs()
   }
 
