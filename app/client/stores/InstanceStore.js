@@ -21,8 +21,12 @@ class InstanceStore extends EventEmitter {
     return this.instances
   }
 
-  getInstance = async (name) => {
-    return (await axios.get(window.host + '/instance/name/' + name)).data
+  getInstance = async (id) => {
+    if (this.instances.length === 0)
+      await this.fetchInstances()
+    return this.instances.find((instance) => {
+      return id === instance._id
+    })
   }
 
   startInstance = async (name) => {

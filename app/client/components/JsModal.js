@@ -11,12 +11,14 @@ import AlertStore       from '../stores/AlertStore'
 export default class JsModal extends React.Component {
   constructor(props) {
     super(props)
-    this.state.js = props.js
+    console.log('JSMODAL')
+    console.log(props)
+    this.state = { js: props.js }
   }
 
   loadJs = async () => {
     try {
-      this.setState({js: (await axios.get(this.state.fetchUrl)).data})
+      this.setState({js: (await axios.get(this.props.fetchUrl)).data})
     } catch (err) {
       console.log(err)
       AlertStore.createAlert(err)
@@ -24,10 +26,12 @@ export default class JsModal extends React.Component {
   }
 
   toggle = async () => {
+    console.log('TOGGLE')
+    console.log(this.state)
     this.setState({
-      modal: !this.state.modal
+      modal: this.state.modal? false : true
     })
-
+    console.log(this.state)
     if (!this.state.modal && !this.state.js)
       this.loadJs()
   }
@@ -35,7 +39,7 @@ export default class JsModal extends React.Component {
   render() {
     return (
       <div>
-        <Button outline={true} color="primary" onClick={this.toggle}>{this.state.label || 'view'}</Button>
+        <Button outline={true} color="primary" onClick={this.toggle}>{this.props.label || 'view'}</Button>
         <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
           <ModalHeader toggle={this.toggle}>{this.state.title}</ModalHeader>
           <ModalBody>

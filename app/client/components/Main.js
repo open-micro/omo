@@ -8,15 +8,9 @@ import Blueprints       from '../pages/Blueprints'
 import Instances        from '../pages/Instances'
 import Instance         from '../pages/Instance'
 import Alert            from './Alert'
-import { Breadcrumbs }  from 'react-breadcrumbs'
-import CrumbRoute       from './CrumbRoute'
+import Breadcrumbs      from './Breadcrumbs'
 
 export default class Main extends React.Component {
-  constructor() {
-    super()
-
-    console.log(Breadcrumbs)
-  }
   render() {
     const containerStyle = {
       marginTop: "10px"
@@ -37,10 +31,10 @@ export default class Main extends React.Component {
             <div class="col-lg-12">
               <Switch>
                 <Route exact path='/' component={Home} />
-                <CrumbRoute title='triggers' path='/triggers' component={Triggers}/>
-                <CrumbRoute title='blueprints' path='/blueprints' component={Blueprints}/>
-                <CrumbRoute title='instances' exact path='/instances' component={Instances}/>
-                <CrumbRoute path='/instances/:id' component={Instance}/>
+                <Route title='triggers' path='/triggers' component={Triggers}/>
+                <Route title='blueprints' path='/blueprints' component={Blueprints}/>
+                <Route title='instances' exact path='/instances' component={Instances}/>
+                <Route path='/instances/:instanceId' component={Instance}/>
               </Switch>
             </div>
           </div>

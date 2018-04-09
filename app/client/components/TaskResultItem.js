@@ -12,11 +12,12 @@ import AlertStore           from '../stores/AlertStore'
 import FileDownload         from 'js-file-download'
 import axios                from "axios"
 
-export default class BlueprintItem extends React.Component {
+export default class TaskResultItem extends React.Component {
   constructor(props) {
     super(props)
     this.state = {...props}
-    this.state.fetchUrl = window.host + '/instance/file/'
+    if (!this.isFile() && !this.state.data) // JsModal will attempt an API call if data is not set
+      this.state.data = ' '
   }
 
   isFile = () => {
@@ -36,7 +37,13 @@ export default class BlueprintItem extends React.Component {
     return (
         <tr>
           <td>
-            {'task ' + this.state.index + ' (' + this.state.name + ')'}
+            {this.state.index}
+          </td>
+          <td>
+            {this.state.name}
+          </td>
+          <td>
+            {this.state.type}
           </td>
           {!this.isFile() && (
             <td>

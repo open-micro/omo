@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /home/osboxes/.yarn/bin/yarn.js add react-bradcrumbs-dynamic
+  /usr/local/bin/node /home/osboxes/.yarn/bin/yarn.js remove reaxct-breadcrumbs
 
 PATH: 
   /home/osboxes/.yarn/bin:/home/osboxes/.config/yarn/global/node_modules/.bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
@@ -55,6 +55,7 @@ npm manifest:
       "mongoose": "5.0.8",
       "morgan": "1.9.0",
       "react": "^16.2.0",
+      "react-breadcrumbs": "^2.1.4",
       "react-dom": "^16.2.0",
       "react-json-pretty": "^1.7.4",
       "react-notebook": "^0.1.0",
@@ -4766,6 +4767,10 @@ Lockfile:
     version "4.4.2"
     resolved "https://registry.yarnpkg.com/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
   
+  lodash.isequal@^4.5.0:
+    version "4.5.0"
+    resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+  
   lodash.isfunction@^3.0.9:
     version "3.0.9"
     resolved "https://registry.yarnpkg.com/lodash.isfunction/-/lodash.isfunction-3.0.9.tgz#06de25df4db327ac931981d1bdb067e5af68d051"
@@ -6459,6 +6464,14 @@ Lockfile:
       minimist "^1.2.0"
       strip-json-comments "~2.0.1"
   
+  react-breadcrumbs@^2.1.4:
+    version "2.1.4"
+    resolved "https://registry.yarnpkg.com/react-breadcrumbs/-/react-breadcrumbs-2.1.4.tgz#6a73f30458dc7aa1314bff9945c0f04ffa33cc7e"
+    dependencies:
+      lodash.isequal "^4.5.0"
+      redux "^3.6.0"
+      uuid "^3.0.1"
+  
   react-code-mirror@^3.0.6:
     version "3.1.0"
     resolved "https://registry.yarnpkg.com/react-code-mirror/-/react-code-mirror-3.1.0.tgz#d1e34a417dc9555dddbd63528f9fa6370d46fc44"
@@ -6745,7 +6758,7 @@ Lockfile:
     dependencies:
       balanced-match "^0.4.2"
   
-  redux@^3.7.1:
+  redux@^3.6.0, redux@^3.7.1:
     version "3.7.2"
     resolved "https://registry.yarnpkg.com/redux/-/redux-3.7.2.tgz#06b73123215901d25d065be342eb026bc1c8537b"
     dependencies:
@@ -8775,11 +8788,10 @@ Lockfile:
       yeoman-environment "^1.1.0"
 
 Trace: 
-  Error: Couldn't find package "react-bradcrumbs-dynamic" on the "npm" registry.
+  Error: This module isn't specified in a manifest.
       at new MessageError (/home/osboxes/.yarn/lib/cli.js:186:110)
-      at NpmResolver.<anonymous> (/home/osboxes/.yarn/lib/cli.js:51625:15)
+      at Object.<anonymous> (/home/osboxes/.yarn/lib/cli.js:60445:15)
       at Generator.next (<anonymous>)
       at step (/home/osboxes/.yarn/lib/cli.js:98:30)
       at /home/osboxes/.yarn/lib/cli.js:109:13
       at <anonymous>
-      at process._tickCallback (internal/process/next_tick.js:118:7)
