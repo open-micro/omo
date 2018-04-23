@@ -9,7 +9,6 @@ import TriggerStore   from '../stores/TriggerStore'
 export default class TriggerItem extends React.Component {
   constructor(props) {
     super(props)
-    console.log(props)
     this.state = {name: props.name}
     this.updateLineItems(props)
     this.state.status = this.updateButtonStatus(props)

@@ -34,7 +34,6 @@ export default class Instances extends React.Component {
   }
 
   setInstances = (instances) => {
-    console.log(instances)
     if (!instances)
       console.log('NO INSTANCES')
     else {

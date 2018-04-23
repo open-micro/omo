@@ -1,4 +1,5 @@
 const express         = require('express')
+const proxy           = require('http-proxy-middleware');
 const glob            = require('glob')
 const favicon         = require('serve-favicon')
 const logger          = require('morgan')
@@ -12,9 +13,11 @@ module.exports = (app, config) => {
   app.locals.ENV = env
   app.locals.ENV_DEVELOPMENT = env == 'development'
 
-  //app.set('views', config.root + '/app/views');
-  ///app.set('view engine', 'jsx');
-  //app.engine('jsx', require('express-react-views').createEngine());
+  // ipynb proxy middleware
+  let wsProxy = proxy({ target: 'http://localhost:8888',
+                        ws: true,
+                        changeOrigin: true})
+  app.use('/ipython', wsProxy)
 
   // app.use(favicon(config.root + '/public/img/favicon.ico'))
   app.use(logger('dev'))
@@ -42,12 +45,11 @@ module.exports = (app, config) => {
   // error handlers
   app.use(dbErrorHandler)
   app.use((err, req, res, next) => {
-    console.log(err.message)
     res.status(err.status || 500)
     res.json({
       message: err.message
     })
   })
 
-  return app
+  return wsProxy
 }

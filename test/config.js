@@ -2,7 +2,6 @@ const path        = require('path')
 const portfinder  = require('portfinder')
 const db          = require('../app/utils/db')
 const queue       = require('../app/utils/queue')
-
 const mockery     = require('mockery')
 
 var db_con, server

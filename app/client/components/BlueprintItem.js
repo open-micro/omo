@@ -18,7 +18,7 @@ export default class BlueprintItem extends React.Component {
 
   modalToggle = () => {
     this.setState({
-      modal: !this.state.modal
+      modal: this.state.modal? false : true
     })
   }
 

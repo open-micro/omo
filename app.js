@@ -44,11 +44,12 @@ module.exports = () => {
 
     // express (note async/await decorator)
     const app = aa(express())
-    require('./config/express')(app, config)
+    let wsProxy = require('./config/express')(app, config)
 
     return new Promise((resolve, reject) => {
-      var server = app.listen(config.port, () => {
-        logger.info('Express server listening on port ' + config.port)
+      let server = app.listen(config.port, () => {
+          logger.info('Express server listening on port ' + config.port)
+          server.on('upgrade', wsProxy.upgrade)
           resolve(server)
         })
     })
