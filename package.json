@@ -38,6 +38,7 @@
     "mongodb-queue": "3.1.0",
     "mongoose": "5.0.8",
     "morgan": "1.9.0",
+    "node-request-by-swagger": "^1.0.7",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-json-pretty": "^1.7.4",
