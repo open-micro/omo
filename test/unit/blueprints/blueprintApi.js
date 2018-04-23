@@ -80,6 +80,6 @@ describe('blueprints', function() {
         assert.equal(body[0].status, 'done')
         done()
       }, done)
-    }, 5000)
+    }, 7000)
   })
 })

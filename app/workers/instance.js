@@ -57,7 +57,8 @@ const processInstances = async () => {
   try {
     // ready instances
     let instances = await Instance.find({status: 'ready'}, 'blueprint')
-    instances.forEach(async (instance) => {
+    for (let i=0; i<instances.length; i++) {
+      let instance = instances[i]
       while (instance.status === 'ready') {
         if (instance.blueprint.tasks[instance.currentStep]) { // task available to process
           logger.debug('processing instance of blueprint ' + instance.blueprint.name)
@@ -65,6 +66,7 @@ const processInstances = async () => {
           // process exec step
           if (instance.blueprint.tasks[instance.currentStep].type === 'exec') {
             logger.debug('processing exec task for ' + instance.blueprint.name + ' task ' + instance.currentStep)
+            console.log(instance._id)
             instance.status = 'processing'
             await instance.save()
             await execHandler.processExec(instance) // process exec task
@@ -88,16 +90,17 @@ const processInstances = async () => {
           await instance.save()
         }
       }
-    })
+    }
 
     // detached instances
     instances = await Instance.find({status: 'detached',
                                     nextCheck: {$lte: Date.now()}}, 'blueprint')
-    instances.forEach(async (instance) => {
+    for (let i=0; i<instances.length; i++) {
+      let instance = instances[i]
       await execHandler.processDetached(instance) // process detached task
       updateInstanceStatus(instance) // update instance for next processing
       await instance.save()
-    })
+    }
   } catch (err) {
     logger.error(err)
     throw(err)
